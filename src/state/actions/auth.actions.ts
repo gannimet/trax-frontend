@@ -1,7 +1,5 @@
-import { ActionCreator, Dispatch } from 'redux';
-import { ThunkAction } from 'redux-thunk';
+import { Dispatch } from 'redux';
 import AuthService from '../../services/auth.service';
-import { StoreStateType } from '../root.reducer';
 
 export class AuthActionTypes {
   static readonly LOGIN = 'LOGIN';
@@ -32,14 +30,15 @@ export interface LoginErrorAction {
 
 const authService = new AuthService();
 
-export const login: ActionCreator<
-  ThunkAction<
-    Promise<LoginSuccessAction | LoginErrorAction>,
-    StoreStateType,
-    unknown,
-    LoginSuccessAction | LoginErrorAction
-  >
-> = (username: string, password: string) => {
+// login: ActionCreator<
+// ThunkAction<
+//   Promise<LoginSuccessAction | LoginErrorAction>,
+//   StoreStateType,
+//   unknown,
+//   LoginSuccessAction | LoginErrorAction
+// >
+// >
+export const login = (username: string, password: string) => {
   return (dispatch: Dispatch): Promise<LoginSuccessAction> => {
     return authService.login(username, password).then((response) => {
       return dispatch({

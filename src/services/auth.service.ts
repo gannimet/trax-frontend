@@ -9,7 +9,7 @@ class AuthService {
 
   login(username: string, password: string): Promise<LoginResponse> {
     return this.clientInstance
-      .post<LoginResponse>('/login', {
+      .post<LoginResponse>('/auth/login', {
         username,
         password,
       })

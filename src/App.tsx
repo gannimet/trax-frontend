@@ -1,9 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import './App.scss';
+import LoginPage from './pages/Login/login.page';
 import { rootReducer } from './state/root.reducer';
 
 const store = createStore(
@@ -14,7 +17,11 @@ const store = createStore(
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <div className="app">Hello world</div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/login" component={LoginPage} />
+        </Switch>
+      </BrowserRouter>
     </Provider>
   );
 };
