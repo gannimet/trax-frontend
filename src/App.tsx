@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import './App.css';
+import './App.scss';
 import { rootReducer } from './state/root.reducer';
 
 const store = createStore(
@@ -14,7 +14,7 @@ const store = createStore(
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <div className="App">Hello world</div>
+      <div className="app">Hello world</div>
     </Provider>
   );
 };
