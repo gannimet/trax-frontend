@@ -21,6 +21,10 @@ class AuthService {
         return response.data;
       });
   }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('accessToken');
+  }
 }
 
 export default AuthService;

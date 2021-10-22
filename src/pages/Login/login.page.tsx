@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -21,38 +21,47 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="login-page">
-      <h1>Login</h1>
+      <Divider>Login</Divider>
 
-      <Form
-        name="login"
-        onFinish={onSubmit}
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 6 }}
-      >
-        <Form.Item
-          label="E-Mail"
-          name="email"
-          rules={[
-            { required: true, message: 'Please enter your e-mail address' },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+      <Row justify="start">
+        <Col span={8} offset={8}>
+          <Form
+            name="login"
+            onFinish={onSubmit}
+            labelCol={{ flex: '100px' }}
+            wrapperCol={{ flex: 'auto' }}
+            style={{ border: '1px solid red' }}
+          >
+            <Form.Item
+              label="E-Mail"
+              name="email"
+              rules={[
+                { required: true, message: 'Please enter your e-mail address' },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please enter your password' }]}
-        >
-          <Input />
-        </Form.Item>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: 'Please enter your password' },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item wrapperCol={{ span: 6, offset: 4 }}>
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Login
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+
+      <Divider />
     </div>
   );
 };

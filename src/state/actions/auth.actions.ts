@@ -30,14 +30,6 @@ export interface LoginErrorAction {
 
 const authService = new AuthService();
 
-// login: ActionCreator<
-// ThunkAction<
-//   Promise<LoginSuccessAction | LoginErrorAction>,
-//   StoreStateType,
-//   unknown,
-//   LoginSuccessAction | LoginErrorAction
-// >
-// >
 export const login = (username: string, password: string) => {
   return (dispatch: Dispatch): Promise<LoginSuccessAction> => {
     return authService.login(username, password).then((response) => {
