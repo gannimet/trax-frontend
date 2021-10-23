@@ -11,16 +11,29 @@ import {
   nakedLayoutRoutes,
   Routes,
 } from './constants/routes';
+import { StorageItem } from './constants/storage';
 import FullPageLayout from './layouts/FullPageLayout/full-page.layout';
 import NakedLayout from './layouts/NakedLayout/naked.layout';
 import LoginPage from './pages/Login/login.page';
 import OverviewPage from './pages/Overview/overview.page';
+import {
+  AuthActionTypes,
+  LoginSuccessAction,
+} from './state/actions/auth.actions';
 import { rootReducer } from './state/root.reducer';
 
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk)),
 );
+
+const storedAccessToken = localStorage.getItem(StorageItem.AccessToken);
+if (storedAccessToken) {
+  store.dispatch({
+    type: AuthActionTypes.LOGIN_SUCCESS,
+    accessToken: storedAccessToken,
+  } as LoginSuccessAction);
+}
 
 const App: React.FC = () => {
   return (

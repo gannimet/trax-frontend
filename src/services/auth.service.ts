@@ -1,3 +1,4 @@
+import { StorageItem } from '../constants/storage';
 import HttpClientService from './http-client.service';
 
 export interface LoginResponse {
@@ -16,14 +17,10 @@ class AuthService {
       .then((response) => {
         const accessToken = response.data.accessToken;
 
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem(StorageItem.AccessToken, accessToken);
 
         return response.data;
       });
-  }
-
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('accessToken');
   }
 }
 

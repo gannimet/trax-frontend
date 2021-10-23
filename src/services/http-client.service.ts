@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { StorageItem } from '../constants/storage';
 
 class HttpClientService {
   private static clientInstance?: AxiosInstance;
@@ -20,7 +21,7 @@ class HttpClientService {
 
   private static setupInterceptor() {
     HttpClientService.clientInstance?.interceptors.request.use((config) => {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem(StorageItem.AccessToken);
 
       if (accessToken && config.headers) {
         config.headers.Authorization = `Bearer ${accessToken}`;

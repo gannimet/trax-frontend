@@ -1,21 +1,17 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import AuthService from '../../services/auth.service';
+import { StoreStateType } from '../../state/root.reducer';
 
 const ProtectedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
-  const authService = new AuthService();
+  const isAuthenticated = useSelector<StoreStateType, boolean>(
+    (state) => state.auth.isAuthenticated,
+  );
 
-  return (
-    <Route
-      {...rest}
-      render={({ location }) => {
-        return authService.isAuthenticated() ? (
-          children
-        ) : (
-          <Redirect to={{ pathname: '/login', state: { from: location } }} />
-        );
-      }}
-    />
+  return isAuthenticated ? (
+    <Route {...rest}>{children}</Route>
+  ) : (
+    <Redirect to={{ pathname: '/login' }} />
   );
 };
 
