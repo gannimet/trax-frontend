@@ -30,7 +30,6 @@ const LoginPage: React.FC = () => {
             onFinish={onSubmit}
             labelCol={{ flex: '100px' }}
             wrapperCol={{ flex: 'auto' }}
-            style={{ border: '1px solid red' }}
           >
             <Form.Item
               label="E-Mail"
