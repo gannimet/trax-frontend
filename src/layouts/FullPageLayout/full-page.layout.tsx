@@ -15,7 +15,7 @@ const FullPageLayout: React.FC = ({ children }) => {
         </Menu>
       </Header>
       <Layout>
-        <Sider>
+        <Sider collapsible>
           <Menu mode="inline">
             <Menu.Item key="active-sprint-item">Active Sprint</Menu.Item>
             <Menu.Item key="backlog-item">Backlog</Menu.Item>

@@ -1,12 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { StoreStateType } from '../../state/root.reducer';
+import { useAuth } from '../../hooks/use-auth';
 
 const ProtectedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
-  const isAuthenticated = useSelector<StoreStateType, boolean>(
-    (state) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useAuth();
 
   return isAuthenticated ? (
     <Route {...rest}>{children}</Route>

@@ -1,9 +1,10 @@
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { useAuth } from '../../hooks/use-auth';
 import { AuthReducerAction, login } from '../../state/actions/auth.actions';
 import { StoreStateType } from '../../state/root.reducer';
 import { LoginFormValues } from './login.page.types';
@@ -11,9 +12,7 @@ import { LoginFormValues } from './login.page.types';
 const LoginPage: React.FC = () => {
   const dispatch: ThunkDispatch<StoreStateType, void, AuthReducerAction> =
     useDispatch<Dispatch<AuthReducerAction>>();
-  const isAuthenticated = useSelector<StoreStateType, boolean>(
-    (state) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useAuth();
 
   const onSubmit = (values: LoginFormValues) => {
     if (values.email && values.password) {
