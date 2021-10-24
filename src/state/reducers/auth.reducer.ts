@@ -29,6 +29,8 @@ export const authReducer: Reducer<AuthState, AuthReducerAction> = (
         authenticationInfo: undefined,
         error: action.error,
       };
+    case AuthActionTypes.LOGOUT:
+      return authInitialState;
     default:
       return state;
   }

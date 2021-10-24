@@ -7,6 +7,11 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { AuthReducerAction, logout } from '../../state/actions/auth.actions';
+import { StoreStateType } from '../../state/root.reducer';
 import './full-page.layout.scss';
 
 const { Header, Content, Sider, Footer } = Layout;
@@ -14,6 +19,12 @@ const { SubMenu } = Menu;
 
 const FullPageLayout: React.FC = ({ children }) => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const dispatch: ThunkDispatch<StoreStateType, void, AuthReducerAction> =
+    useDispatch<Dispatch<AuthReducerAction>>();
+
+  const onLogoutClick = () => {
+    dispatch(logout());
+  };
 
   return (
     <Layout>
@@ -31,7 +42,11 @@ const FullPageLayout: React.FC = ({ children }) => {
               Profile
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="logout-item" icon={<FrownTwoTone />}>
+            <Menu.Item
+              key="logout-item"
+              icon={<FrownTwoTone />}
+              onClick={onLogoutClick}
+            >
               Logout
             </Menu.Item>
           </SubMenu>

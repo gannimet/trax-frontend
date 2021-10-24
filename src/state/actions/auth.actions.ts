@@ -6,12 +6,14 @@ export class AuthActionTypes {
   static readonly LOGIN = 'LOGIN';
   static readonly LOGIN_SUCCESS = 'LOGIN_SUCCESS';
   static readonly LOGIN_ERROR = 'LOGIN_ERROR';
+  static readonly LOGOUT = 'LOGOUT';
 }
 
 export type AuthReducerAction =
   | LoginAction
   | LoginSuccessAction
-  | LoginErrorAction;
+  | LoginErrorAction
+  | LogoutAction;
 
 export interface LoginAction {
   type: typeof AuthActionTypes.LOGIN;
@@ -29,15 +31,29 @@ export interface LoginErrorAction {
   error: Error;
 }
 
+export interface LogoutAction {
+  type: typeof AuthActionTypes.LOGOUT;
+}
+
 const authService = new AuthService();
 
 export const login = (username: string, password: string) => {
   return (dispatch: Dispatch): Promise<LoginSuccessAction> => {
     return authService.login(username, password).then((authenticationInfo) => {
       return dispatch({
-        type: AuthActionTypes.LOGIN_SUCCESS,
+        type: AuthActionTypes.LOGIN_SUCCESS as typeof AuthActionTypes.LOGIN_SUCCESS,
         authenticationInfo,
-      } as LoginSuccessAction);
+      });
+    });
+  };
+};
+
+export const logout = () => {
+  return (dispatch: Dispatch): LogoutAction => {
+    authService.logout();
+
+    return dispatch({
+      type: AuthActionTypes.LOGOUT,
     });
   };
 };

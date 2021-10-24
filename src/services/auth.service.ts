@@ -30,6 +30,11 @@ class AuthService extends HttpClientService {
         };
       });
   }
+
+  logout(): void {
+    localStorage.removeItem(StorageItem.AccessToken);
+    localStorage.removeItem(StorageItem.TokenContents);
+  }
 }
 
 export default AuthService;
