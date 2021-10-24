@@ -1,11 +1,11 @@
 import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { useAuth } from '../../hooks/use-auth';
+import { useAuthState } from '../../hooks/use-auth';
 
 const ProtectedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
-  const isAuthenticated = useAuth();
+  const authState = useAuthState();
 
-  return isAuthenticated ? (
+  return authState.isAuthenticated ? (
     <Route {...rest}>{children}</Route>
   ) : (
     <Redirect to={{ pathname: '/login' }} />

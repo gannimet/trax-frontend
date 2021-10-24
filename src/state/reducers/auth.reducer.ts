@@ -1,9 +1,10 @@
 import { Reducer } from 'redux';
+import { AuthenticationInfo } from '../../models/auth.models';
 import { AuthActionTypes, AuthReducerAction } from '../actions/auth.actions';
 
 export interface AuthState {
   isAuthenticated: boolean;
-  accessToken?: string;
+  authenticationInfo?: AuthenticationInfo;
   error?: Error;
 }
 
@@ -14,18 +15,18 @@ export const authInitialState: AuthState = {
 export const authReducer: Reducer<AuthState, AuthReducerAction> = (
   state = authInitialState,
   action,
-) => {
+): AuthState => {
   switch (action.type) {
     case AuthActionTypes.LOGIN_SUCCESS:
       return {
         isAuthenticated: true,
-        accessToken: action.accessToken,
+        authenticationInfo: action.authenticationInfo,
         error: undefined,
       };
     case AuthActionTypes.LOGIN_ERROR:
       return {
         isAuthenticated: false,
-        accessToken: undefined,
+        authenticationInfo: undefined,
         error: action.error,
       };
     default:

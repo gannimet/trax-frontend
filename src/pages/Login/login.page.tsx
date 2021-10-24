@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { useAuth } from '../../hooks/use-auth';
+import { useAuthState } from '../../hooks/use-auth';
 import { AuthReducerAction, login } from '../../state/actions/auth.actions';
 import { StoreStateType } from '../../state/root.reducer';
 import { LoginFormValues } from './login.page.types';
@@ -12,7 +12,7 @@ import { LoginFormValues } from './login.page.types';
 const LoginPage: React.FC = () => {
   const dispatch: ThunkDispatch<StoreStateType, void, AuthReducerAction> =
     useDispatch<Dispatch<AuthReducerAction>>();
-  const isAuthenticated = useAuth();
+  const authState = useAuthState();
 
   const onSubmit = (values: LoginFormValues) => {
     if (values.email && values.password) {
@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  return isAuthenticated ? (
+  return authState.isAuthenticated ? (
     <Redirect to="/overview" />
   ) : (
     <div className="login-page">

@@ -1,8 +1,7 @@
 import { useSelector } from 'react-redux';
+import { AuthState } from '../state/reducers/auth.reducer';
 import { StoreStateType } from '../state/root.reducer';
 
-export const useAuth = (): boolean => {
-  return useSelector<StoreStateType, boolean>(
-    (state) => state.auth.isAuthenticated,
-  );
+export const useAuthState = (): AuthState => {
+  return useSelector<StoreStateType, AuthState>((state) => state.auth);
 };

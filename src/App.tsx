@@ -28,10 +28,15 @@ const store = createStore(
 );
 
 const storedAccessToken = localStorage.getItem(StorageItem.AccessToken);
+const storedTokenContents = localStorage.getItem(StorageItem.TokenContents);
+
 if (storedAccessToken) {
   store.dispatch({
     type: AuthActionTypes.LOGIN_SUCCESS,
-    accessToken: storedAccessToken,
+    authenticationInfo: {
+      loginResponse: { accessToken: storedAccessToken },
+      tokenContents: JSON.parse(storedTokenContents ?? 'null'),
+    },
   } as LoginSuccessAction);
 }
 

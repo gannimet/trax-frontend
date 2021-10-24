@@ -1,12 +1,25 @@
-.content-wrapper-layout {
-  padding: 0 24px 24px 24px;
+.sidebar {
+  position: fixed;
+  height: 100vh;
+  overflow: auto;
+  left: 0;
 }
 
-.breadcrumb {
-  margin: 16px 0;
-}
+.content-layout {
+  padding: 0 24px 0 24px;
+  transition-property: margin-left;
+  transition-duration: 0.2s;
 
-.main-content {
-  background-color: #fff;
-  padding: 24px;
+  &__breadcrumb {
+    margin: 16px 0;
+  }
+
+  &__content {
+    background-color: #fff;
+    padding: 24px;
+  }
+
+  &__footer {
+    text-align: center;
+  }
 }

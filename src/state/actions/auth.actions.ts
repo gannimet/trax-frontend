@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { AuthenticationInfo } from '../../models/auth.models';
 import AuthService from '../../services/auth.service';
 
 export class AuthActionTypes {
@@ -20,7 +21,7 @@ export interface LoginAction {
 
 export interface LoginSuccessAction {
   type: typeof AuthActionTypes.LOGIN_SUCCESS;
-  accessToken: string;
+  authenticationInfo: AuthenticationInfo;
 }
 
 export interface LoginErrorAction {
@@ -32,10 +33,10 @@ const authService = new AuthService();
 
 export const login = (username: string, password: string) => {
   return (dispatch: Dispatch): Promise<LoginSuccessAction> => {
-    return authService.login(username, password).then((response) => {
+    return authService.login(username, password).then((authenticationInfo) => {
       return dispatch({
         type: AuthActionTypes.LOGIN_SUCCESS,
-        accessToken: response.accessToken,
+        authenticationInfo,
       } as LoginSuccessAction);
     });
   };

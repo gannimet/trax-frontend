@@ -1,25 +1,33 @@
+import jwtDecode from 'jwt-decode';
 import { StorageItem } from '../constants/storage';
+import {
+  AuthenticationInfo,
+  LoginResponse,
+  TokenContents,
+} from '../models/auth.models';
 import HttpClientService from './http-client.service';
 
-export interface LoginResponse {
-  accessToken: string;
-}
-
-class AuthService {
-  private clientInstance = HttpClientService.getClientInstance();
-
-  login(username: string, password: string): Promise<LoginResponse> {
-    return this.clientInstance
+class AuthService extends HttpClientService {
+  login(username: string, password: string): Promise<AuthenticationInfo> {
+    return AuthService.getClientInstance()
       .post<LoginResponse>('/auth/login', {
         username,
         password,
       })
       .then((response) => {
         const accessToken = response.data.accessToken;
+        const tokenContents = jwtDecode(accessToken) as TokenContents;
 
         localStorage.setItem(StorageItem.AccessToken, accessToken);
+        localStorage.setItem(
+          StorageItem.TokenContents,
+          JSON.stringify(tokenContents),
+        );
 
-        return response.data;
+        return {
+          loginResponse: response.data,
+          tokenContents,
+        };
       });
   }
 }
