@@ -4,13 +4,18 @@ import {
   FrownTwoTone,
   IdcardTwoTone,
   TagTwoTone,
+  UserOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Avatar, Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { AuthReducerAction, logout } from '../../state/actions/auth.actions';
+import { useAuthState } from '../../hooks/use-auth';
+import {
+  AuthActions,
+  AuthReducerAction,
+} from '../../state/actions/auth.actions';
 import { StoreStateType } from '../../state/root.reducer';
 import './full-page.layout.scss';
 
@@ -18,9 +23,20 @@ const { Header, Content, Sider, Footer } = Layout;
 const { SubMenu } = Menu;
 
 const FullPageLayout: React.FC = ({ children }) => {
+  const authState = useAuthState();
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const dispatch: ThunkDispatch<StoreStateType, void, AuthReducerAction> =
     useDispatch<Dispatch<AuthReducerAction>>();
+
+  if (
+    !authState.isAuthenticated ||
+    !authState.authenticationInfo?.tokenContents
+  ) {
+    return null;
+  }
+
+  const { firstName, lastName } = authState.authenticationInfo?.tokenContents;
+  const { logout } = new AuthActions();
 
   const onLogoutClick = () => {
     dispatch(logout());
@@ -35,7 +51,8 @@ const FullPageLayout: React.FC = ({ children }) => {
           <Menu.Item key="3">nav 3</Menu.Item>
           <SubMenu
             key="sub-nav"
-            title="Side Navigation"
+            title={`${firstName} ${lastName}`}
+            icon={<Avatar size="small" icon={<UserOutlined />} />}
             style={{ marginLeft: 'auto' }}
           >
             <Menu.Item key="profile-item" icon={<IdcardTwoTone />}>

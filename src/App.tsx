@@ -16,10 +16,7 @@ import FullPageLayout from './layouts/FullPageLayout/full-page.layout';
 import NakedLayout from './layouts/NakedLayout/naked.layout';
 import LoginPage from './pages/Login/login.page';
 import OverviewPage from './pages/Overview/overview.page';
-import {
-  AuthActionTypes,
-  LoginSuccessAction,
-} from './state/actions/auth.actions';
+import { AuthActions, LoginSuccessAction } from './state/actions/auth.actions';
 import { rootReducer } from './state/root.reducer';
 
 const store = createStore(
@@ -32,7 +29,7 @@ const storedTokenContents = localStorage.getItem(StorageItem.TokenContents);
 
 if (storedAccessToken) {
   store.dispatch({
-    type: AuthActionTypes.LOGIN_SUCCESS,
+    type: AuthActions.LOGIN_SUCCESS,
     authenticationInfo: {
       loginResponse: { accessToken: storedAccessToken },
       tokenContents: JSON.parse(storedTokenContents ?? 'null'),

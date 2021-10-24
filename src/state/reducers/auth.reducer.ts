@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { AuthenticationInfo } from '../../models/auth.models';
-import { AuthActionTypes, AuthReducerAction } from '../actions/auth.actions';
+import { AuthActions, AuthReducerAction } from '../actions/auth.actions';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -17,19 +17,19 @@ export const authReducer: Reducer<AuthState, AuthReducerAction> = (
   action,
 ): AuthState => {
   switch (action.type) {
-    case AuthActionTypes.LOGIN_SUCCESS:
+    case AuthActions.LOGIN_SUCCESS:
       return {
         isAuthenticated: true,
         authenticationInfo: action.authenticationInfo,
         error: undefined,
       };
-    case AuthActionTypes.LOGIN_ERROR:
+    case AuthActions.LOGIN_ERROR:
       return {
         isAuthenticated: false,
         authenticationInfo: undefined,
         error: action.error,
       };
-    case AuthActionTypes.LOGOUT:
+    case AuthActions.LOGOUT:
       return authInitialState;
     default:
       return state;
