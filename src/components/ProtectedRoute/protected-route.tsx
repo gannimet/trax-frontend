@@ -8,7 +8,7 @@ const ProtectedRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   return authState.isAuthenticated ? (
     <Route {...rest}>{children}</Route>
   ) : (
-    <Redirect to={{ pathname: '/login' }} />
+    <Redirect to="/login" />
   );
 };
 

@@ -9,6 +9,7 @@ import {
 import { Avatar, Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useAuthState } from '../../hooks/use-auth';
@@ -32,7 +33,7 @@ const FullPageLayout: React.FC = ({ children }) => {
     !authState.isAuthenticated ||
     !authState.authenticationInfo?.tokenContents
   ) {
-    return null;
+    return <Redirect to="/login" />;
   }
 
   const { firstName, lastName } = authState.authenticationInfo?.tokenContents;
