@@ -13,6 +13,7 @@ import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useAuthState } from '../../hooks/use-auth';
+import AuthService from '../../services/auth.service';
 import {
   AuthActions,
   AuthReducerAction,
@@ -39,9 +40,12 @@ const FullPageLayout: React.FC = ({ children }) => {
   const { firstName, lastName } = authState.authenticationInfo?.tokenContents;
   const { logout } = new AuthActions();
 
-  const onLogoutClick = () => {
+  const onLogoutRequested = () => {
     dispatch(logout());
   };
+
+  // Setup automatic logout on 401 and 403 errors
+  AuthService.setupLogoutInterceptor(onLogoutRequested);
 
   return (
     <Layout>
@@ -63,7 +67,7 @@ const FullPageLayout: React.FC = ({ children }) => {
             <Menu.Item
               key="logout-item"
               icon={<FrownTwoTone />}
-              onClick={onLogoutClick}
+              onClick={onLogoutRequested}
             >
               Logout
             </Menu.Item>

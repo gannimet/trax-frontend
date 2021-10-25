@@ -8,6 +8,22 @@ import {
 import HttpClientService from './http-client.service';
 
 class AuthService extends HttpClientService {
+  static setupLogoutInterceptor(onLogout: () => void): void {
+    AuthService.getClientInstance().interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        const errorStatus: number = error.status || error.response.status;
+
+        if ([401, 403].includes(errorStatus)) {
+          // Token invalid or expired, force logout
+          onLogout();
+        }
+      },
+    );
+  }
+
   login(username: string, password: string): Promise<AuthenticationInfo> {
     return AuthService.getClientInstance()
       .post<LoginResponse>('/auth/login', {
