@@ -41,5 +41,6 @@ module.exports = {
       { blankLine: 'always', prev: '*', next: 'class' },
       { blankLine: 'always', prev: '*', next: 'return' },
     ],
+    'react/prop-types': 'off',
   },
 };

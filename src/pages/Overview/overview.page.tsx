@@ -1,8 +1,10 @@
-import { Alert, Card, Empty, List, PageHeader } from 'antd';
+import { Alert, Card, Col, Empty, List, Row } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import PageTitle from '../../components/PageTitle/page-title';
 import { useAuthState } from '../../hooks/use-auth';
 import {
   UserReducerAction,
@@ -35,37 +37,43 @@ const OverviewPage: React.FC = () => {
 
   return (
     <div className="overview-container">
-      <PageHeader title="Welcome to Trax!" />
+      <PageTitle>Welcome to Trax!</PageTitle>
 
-      <Card title="Your teams">
-        {hasTeams && (
-          <List
-            size="small"
-            dataSource={teamsInfos}
-            renderItem={(teamsInfo) => {
-              return (
-                <List.Item key={teamsInfo.team.id}>
-                  {teamsInfo.team.name}
-                </List.Item>
-              );
-            }}
-          ></List>
-        )}
+      <Row>
+        <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+          <Card title="Your teams">
+            {hasTeams && (
+              <List
+                size="small"
+                dataSource={teamsInfos}
+                renderItem={(teamsInfo) => {
+                  return (
+                    <List.Item key={teamsInfo.team.id}>
+                      <Link to={`/team/${teamsInfo.team.id}`}>
+                        {teamsInfo.team.name}
+                      </Link>
+                    </List.Item>
+                  );
+                }}
+              ></List>
+            )}
 
-        {!hasTeams && (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="Looks like you&#39;re not part of any teams yet."
-          />
-        )}
+            {!hasTeams && !teamsInfosError && (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="Looks like you&#39;re not part of any teams yet."
+              />
+            )}
 
-        {teamsInfosError && (
-          <Alert
-            message="The list of teams could not be loaded at this time."
-            type="error"
-          />
-        )}
-      </Card>
+            {teamsInfosError && (
+              <Alert
+                message="The list of teams could not be loaded at this time."
+                type="error"
+              />
+            )}
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
