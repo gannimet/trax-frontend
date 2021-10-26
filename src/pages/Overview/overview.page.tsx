@@ -5,19 +5,19 @@ import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import PageTitle from '../../components/PageTitle/page-title';
-import { useAuthState } from '../../hooks/use-auth';
+import { useCurrentUserId } from '../../hooks/use-auth';
 import {
-  UserReducerAction,
   UserTeamsActions,
+  UserTeamsReducerAction,
 } from '../../state/actions/user-teams.actions';
 import { UserTeamsState } from '../../state/reducers/user-teams.reducer';
 import { StoreStateType } from '../../state/root.reducer';
 
 const OverviewPage: React.FC = () => {
-  const dispatch: ThunkDispatch<StoreStateType, void, UserReducerAction> =
-    useDispatch<Dispatch<UserReducerAction>>();
-  const authState = useAuthState();
-  const { teamsInfos, error: teamsInfosError } = useSelector<
+  const dispatch: ThunkDispatch<StoreStateType, void, UserTeamsReducerAction> =
+    useDispatch<Dispatch<UserTeamsReducerAction>>();
+  const currentUserId = useCurrentUserId();
+  const { allTeamsInfos, allTeamsInfosError } = useSelector<
     StoreStateType,
     UserTeamsState
   >((state) => state.userTeams);
@@ -25,15 +25,13 @@ const OverviewPage: React.FC = () => {
   const { fetchTeamsOfUser } = new UserTeamsActions();
 
   useEffect(() => {
-    if (authState.authenticationInfo?.tokenContents.id) {
-      dispatch(
-        fetchTeamsOfUser(authState.authenticationInfo?.tokenContents.id),
-      );
+    if (currentUserId) {
+      dispatch(fetchTeamsOfUser(currentUserId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentUserId]);
 
-  const hasTeams = teamsInfos && teamsInfos.length > 0;
+  const hasTeams = allTeamsInfos && allTeamsInfos.length > 0;
 
   return (
     <div className="overview-container">
@@ -45,7 +43,7 @@ const OverviewPage: React.FC = () => {
             {hasTeams && (
               <List
                 size="small"
-                dataSource={teamsInfos}
+                dataSource={allTeamsInfos}
                 renderItem={(teamsInfo) => {
                   return (
                     <List.Item key={teamsInfo.team.id}>
@@ -58,14 +56,14 @@ const OverviewPage: React.FC = () => {
               ></List>
             )}
 
-            {!hasTeams && !teamsInfosError && (
+            {!hasTeams && !allTeamsInfosError && (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 description="Looks like you&#39;re not part of any teams yet."
               />
             )}
 
-            {teamsInfosError && (
+            {allTeamsInfosError && (
               <Alert
                 message="The list of teams could not be loaded at this time."
                 type="error"
