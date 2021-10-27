@@ -1,13 +1,13 @@
 import { Avatar } from 'antd';
 import React from 'react';
-import { getUserInitials } from '../../utils/display.utils';
+import UserAvatar from '../UserAvatar/user-avatar';
 import { AvatarListProps } from './avatar-list.types';
 
 const AvatarList = React.memo<AvatarListProps>(({ users }) => {
   return (
     <Avatar.Group maxCount={5}>
       {users.map((user) => {
-        return <Avatar key={user.id}>{getUserInitials(user)}</Avatar>;
+        return <UserAvatar key={user.id} user={user} />;
       })}
     </Avatar.Group>
   );

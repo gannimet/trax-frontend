@@ -1,4 +1,4 @@
-import { UserTeamInfo } from '../models/team.models';
+import { UserTeamInfo } from '../models/user.models';
 import HttpClientService from './http-client.service';
 
 class UserService extends HttpClientService {

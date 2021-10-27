@@ -1,4 +1,4 @@
-import { User } from '../../models/team.models';
+import { User } from '../../models/user.models';
 
 export interface AvatarListProps {
   users: User[];

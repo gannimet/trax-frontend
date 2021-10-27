@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { UserTeamInfo } from '../../models/team.models';
+import { UserTeamInfo } from '../../models/user.models';
 import {
   UserTeamsActions,
   UserTeamsReducerAction,

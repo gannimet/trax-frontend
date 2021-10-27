@@ -1,4 +1,4 @@
-import { Ticket } from '../../../models/team.models';
+import { Ticket } from '../../../models/ticket.models';
 
 export interface SprintTicketListItemProps {
   ticket: Ticket;

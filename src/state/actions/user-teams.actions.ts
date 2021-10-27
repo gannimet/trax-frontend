@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { UserTeamInfo } from '../../models/team.models';
+import { UserTeamInfo } from '../../models/user.models';
 import UserService from '../../services/user.service';
 
 export class UserTeamsActions {

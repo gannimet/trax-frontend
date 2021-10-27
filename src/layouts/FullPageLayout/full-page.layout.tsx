@@ -5,21 +5,21 @@ import {
   IdcardTwoTone,
   TagTwoTone,
 } from '@ant-design/icons';
-import { Avatar, Breadcrumb, Layout, Menu } from 'antd';
+import { Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import UserAvatar from '../../components/UserAvatar/user-avatar';
 import { useAuthState } from '../../hooks/use-auth';
-import { User } from '../../models/team.models';
+import { User } from '../../models/user.models';
 import AuthService from '../../services/auth.service';
 import {
   AuthActions,
   AuthReducerAction,
 } from '../../state/actions/auth.actions';
 import { StoreStateType } from '../../state/root.reducer';
-import { getUserInitials } from '../../utils/display.utils';
 import './full-page.layout.scss';
 
 const { Header, Content, Sider, Footer } = Layout;
@@ -38,7 +38,11 @@ const FullPageLayout: React.FC = ({ children }) => {
     return <Redirect to="/login" />;
   }
 
-  const { firstName, lastName } = authState.authenticationInfo?.tokenContents;
+  const {
+    firstName,
+    lastName,
+    id: userId,
+  } = authState.authenticationInfo?.tokenContents;
   const { logout } = new AuthActions();
 
   const onLogoutRequested = () => {
@@ -59,9 +63,12 @@ const FullPageLayout: React.FC = ({ children }) => {
             key="sub-nav"
             title={`${firstName} ${lastName}`}
             icon={
-              <Avatar size="small">
-                {getUserInitials({ firstName, lastName } as User)}
-              </Avatar>
+              <>
+                <UserAvatar
+                  size="small"
+                  user={{ firstName, lastName, id: userId } as User}
+                />{' '}
+              </>
             }
             style={{ marginLeft: 'auto' }}
           >
