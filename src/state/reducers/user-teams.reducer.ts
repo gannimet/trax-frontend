@@ -35,17 +35,21 @@ export const userTeamsReducer: Reducer<UserTeamsState, UserTeamsReducerAction> =
           ...state,
           currentTeamInfos: action.teamInfos,
           currentTeamInfosLoading: false,
+          currentTeamInfosError: undefined,
         };
       case UserTeamsActions.FETCH_TEAM_DETAILS_ERROR:
         return {
           ...state,
-          currentTeamInfosError: action.error,
+          currentTeamInfos: undefined,
           currentTeamInfosLoading: false,
+          currentTeamInfosError: action.error,
         };
       case UserTeamsActions.FETCH_TEAM_DETAILS_LOADING:
         return {
           ...state,
+          currentTeamInfos: undefined,
           currentTeamInfosLoading: true,
+          currentTeamInfosError: undefined,
         };
       default:
         return { ...state };

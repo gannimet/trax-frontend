@@ -4,7 +4,6 @@ import {
   FrownTwoTone,
   IdcardTwoTone,
   TagTwoTone,
-  UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
@@ -13,12 +12,14 @@ import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useAuthState } from '../../hooks/use-auth';
+import { User } from '../../models/team.models';
 import AuthService from '../../services/auth.service';
 import {
   AuthActions,
   AuthReducerAction,
 } from '../../state/actions/auth.actions';
 import { StoreStateType } from '../../state/root.reducer';
+import { getUserInitials } from '../../utils/display.utils';
 import './full-page.layout.scss';
 
 const { Header, Content, Sider, Footer } = Layout;
@@ -57,7 +58,11 @@ const FullPageLayout: React.FC = ({ children }) => {
           <SubMenu
             key="sub-nav"
             title={`${firstName} ${lastName}`}
-            icon={<Avatar size="small" icon={<UserOutlined />} />}
+            icon={
+              <Avatar size="small">
+                {getUserInitials({ firstName, lastName } as User)}
+              </Avatar>
+            }
             style={{ marginLeft: 'auto' }}
           >
             <Menu.Item key="profile-item" icon={<IdcardTwoTone />}>

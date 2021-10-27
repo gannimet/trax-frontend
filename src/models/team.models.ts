@@ -24,12 +24,13 @@ export interface Ticket {
   author?: User;
   assignee?: User;
   status: Status;
+  ticketType: TicketTypeObj;
 }
 
 export interface Sprint {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   active: boolean;
   sortIndex: number;
   teamId: string;
@@ -71,3 +72,10 @@ export interface Role {
   canEditTeams: boolean;
   canDeleteTeams: boolean;
 }
+
+export interface TicketTypeObj {
+  id: string;
+  name: TicketType;
+}
+
+export type TicketType = 'Task' | 'Subtask' | 'Story' | 'Bug';

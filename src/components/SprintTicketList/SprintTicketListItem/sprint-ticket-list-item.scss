@@ -1,0 +1,26 @@
+.sprint-ticket-list-item.ant-list-item {
+  border-left-width: 8px;
+  border-left-style: solid;
+  padding: 12px 8px;
+  cursor: grab;
+
+  &:hover {
+    background-color: #ddd;
+  }
+
+  &.bug {
+    border-left-color: #f13242;
+  }
+
+  &.task {
+    border-left-color: #007cf8;
+  }
+
+  &.subtask {
+    border-left-color: #11ccff;
+  }
+
+  &.story {
+    border-left-color: #11cc55;
+  }
+}
