@@ -1,5 +1,6 @@
-import { Badge, Col, List, Row, Space, Tag, Typography } from 'antd';
+import { Col, List, Row, Space, Tag, Typography } from 'antd';
 import React from 'react';
+import EstimateBadge from '../../EstimateBadge/estimate-badge';
 import UserAvatar from '../../UserAvatar/user-avatar';
 import './sprint-ticket-list-item.scss';
 import { SprintTicketListItemProps } from './sprint-ticket-list-item.types';
@@ -17,12 +18,7 @@ const SprintTicketListItem = React.memo<SprintTicketListItemProps>(
             <Link>{ticket.issueNumber}</Link>
           </Col>
           <Col flex="auto">
-            <Text ellipsis={{ tooltip: ticket.title }}>
-              {ticket.title} Der YouTuber »Drachenlord« wird seit Jahren von
-              einem Mob gequält, bedroht und belästigt. Nun hat er sich gewehrt
-              und wurde zu einer Haftstrafe verurteilt. Ein katastrophales
-              Versagen von Justiz, Medien und Gesellschaft.
-            </Text>
+            <Text ellipsis={{ tooltip: ticket.title }}>{ticket.title}</Text>
           </Col>
           <Col flex="none" style={{ textAlign: 'right' }}>
             <Space>
@@ -36,15 +32,7 @@ const SprintTicketListItem = React.memo<SprintTicketListItemProps>(
                 })}
               {ticket.assignee && <UserAvatar user={ticket.assignee} />}
               {ticket.estimate != null && (
-                <Badge
-                  count={ticket.estimate}
-                  style={{
-                    border: '1px solid #999',
-                    backgroundColor: '#eee',
-                    color: '#000',
-                    width: '30px',
-                  }}
-                />
+                <EstimateBadge value={ticket.estimate} />
               )}
             </Space>
           </Col>
