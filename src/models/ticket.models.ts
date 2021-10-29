@@ -10,7 +10,7 @@ export interface Ticket {
   assigneeId: string;
   statusId: string;
   sprintId: string;
-  author?: User;
+  author: User;
   assignee?: User;
   status: TicketStatus;
   ticketType: TicketTypeObj;

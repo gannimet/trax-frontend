@@ -1,7 +1,8 @@
-import { Col, List, Row, Space, Tag, Typography } from 'antd';
+import { Col, List, Row, Space, Typography } from 'antd';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import EstimateBadge from '../../EstimateBadge/estimate-badge';
+import TagList from '../../TagList/tag-list';
 import UserAvatar from '../../UserAvatar/user-avatar';
 import './sprint-ticket-list-item.scss';
 import { SprintTicketListItemProps } from './sprint-ticket-list-item.types';
@@ -32,14 +33,7 @@ const SprintTicketListItem = React.memo<SprintTicketListItemProps>(
           </Col>
           <Col flex="none" style={{ textAlign: 'right' }}>
             <Space>
-              {ticket.tags?.length > 0 &&
-                ticket.tags.map((tag) => {
-                  return (
-                    <Tag key={tag.id} color={`#${tag.color}`}>
-                      {tag.name}
-                    </Tag>
-                  );
-                })}
+              {ticket.tags?.length > 0 && <TagList tags={ticket.tags} />}
               {ticket.assignee && <UserAvatar user={ticket.assignee} />}
               {ticket.estimate != null && (
                 <EstimateBadge value={ticket.estimate} />
