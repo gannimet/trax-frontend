@@ -13,6 +13,7 @@ import NakedLayout from './layouts/NakedLayout/naked.layout';
 import LoginPage from './pages/Login/login.page';
 import OverviewPage from './pages/Overview/overview.page';
 import TeamPage from './pages/Team/team.page';
+import TicketPage from './pages/Ticket/ticket.page';
 import { AuthActions, LoginSuccessAction } from './state/actions/auth.actions';
 import { rootReducer } from './state/root.reducer';
 
@@ -65,6 +66,11 @@ const App: React.FC = () => {
                 exact
                 path={Routes.Team.path}
                 component={TeamPage}
+              />
+              <ProtectedRoute
+                exact
+                path={Routes.Ticket.path}
+                component={TicketPage}
               />
             </Switch>
           </FullPageLayout>

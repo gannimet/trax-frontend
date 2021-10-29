@@ -1,11 +1,19 @@
-import { Alert, Col, Empty, List, Row, Space, Typography } from 'antd';
+import {
+  Alert,
+  Col,
+  Empty,
+  List,
+  Row,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AvatarList from '../../components/AvatarList/avatar-list';
-import LoadingSpinner from '../../components/LoadingSpinner/loading-spinner';
 import PageTitle from '../../components/PageTitle/page-title';
 import SprintTicketListFooter from '../../components/SprintTicketList/SprintTicketListFooter/sprint-ticket-list-footer';
 import SprintTicketListHeader from '../../components/SprintTicketList/SprintTicketListHeader/sprint-ticket-list-header';
@@ -40,11 +48,11 @@ const TeamPage: React.FC = () => {
       dispatch(fetchTeamDetailsOfUser(currentUserId, teamId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId]);
+  }, [currentUserId, teamId]);
 
   const renderContent = () => {
     if (currentTeamInfosLoading) {
-      return <LoadingSpinner />;
+      return <Skeleton />;
     }
 
     if (currentTeamInfosError) {

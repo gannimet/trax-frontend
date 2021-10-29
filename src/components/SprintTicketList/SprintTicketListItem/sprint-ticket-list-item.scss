@@ -1,3 +1,5 @@
+@import '../../../App.scss';
+
 .sprint-ticket-list-item.ant-list-item {
   border-left-width: 8px;
   border-left-style: solid;
@@ -9,19 +11,19 @@
   }
 
   &.bug {
-    border-left-color: #ee0c7d;
+    border-left-color: $bugColor;
   }
 
   &.task {
-    border-left-color: #00a5f8;
+    border-left-color: $taskColor;
   }
 
   &.subtask {
-    border-left-color: #11ccff;
+    border-left-color: $subtaskColor;
   }
 
   &.story {
-    border-left-color: #11cc55;
+    border-left-color: $storyColor;
   }
 
   &__content {

@@ -1,0 +1,19 @@
+@import '../../App.scss';
+
+.ticket-type {
+  &.bug {
+    color: $bugColor;
+  }
+
+  &.task {
+    color: $taskColor;
+  }
+
+  &.subtask {
+    color: $subtaskColor;
+  }
+
+  &.story {
+    color: $storyColor;
+  }
+}
