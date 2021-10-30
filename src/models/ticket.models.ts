@@ -15,6 +15,8 @@ export interface Ticket {
   status: TicketStatus;
   ticketType: TicketTypeObj;
   tags: TicketTag[];
+  comments: TicketComment[];
+  edits: TicketEdit[];
   estimate?: number;
 }
 
@@ -35,4 +37,26 @@ export interface TicketTag {
   id: string;
   name: string;
   color: string;
+}
+
+export interface TicketComment {
+  id: string;
+  text: string;
+  author: User;
+  createdAt: string;
+}
+
+export type TicketEditField =
+  | 'TITLE'
+  | 'DESCRIPTION'
+  | 'ASSIGNEE'
+  | 'SPRINT'
+  | 'STATUS'
+  | 'TYPE';
+
+export interface TicketEdit {
+  id: string;
+  editor: User;
+  field: TicketEditField;
+  editedAt: string;
 }

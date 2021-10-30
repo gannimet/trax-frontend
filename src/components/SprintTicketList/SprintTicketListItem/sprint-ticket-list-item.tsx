@@ -25,7 +25,7 @@ const SprintTicketListItem = React.memo<SprintTicketListItemProps>(
         <Row style={{ width: '100%' }} gutter={8} wrap={false} align="middle">
           <Col flex="none">
             <Link to={`/ticket/${ticket.issueNumber}`}>
-              {ticket.issueNumber}
+              #{ticket.issueNumber}
             </Link>
           </Col>
           <Col flex="auto">

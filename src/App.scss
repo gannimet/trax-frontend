@@ -4,3 +4,8 @@ $bugColor: #ee0c7d;
 $taskColor: #00a5f8;
 $subtaskColor: #11ccff;
 $storyColor: #11cc55;
+
+.ant-descriptions-bordered .ant-descriptions-item-label,
+.ant-descriptions-bordered .ant-descriptions-item-content {
+  padding: 8px 12px;
+}

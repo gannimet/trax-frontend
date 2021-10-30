@@ -1,12 +1,11 @@
 import {
   Alert,
   Col,
-  Descriptions,
   Empty,
   Row,
   Skeleton,
   Space,
-  Tag,
+  Tabs,
   Typography,
 } from 'antd';
 import React, { useEffect } from 'react';
@@ -14,24 +13,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import EstimateBadge from '../../components/EstimateBadge/estimate-badge';
 import TagList from '../../components/TagList/tag-list';
+import TicketCommentBlock from '../../components/TicketCommentBlock/ticket-comment-block';
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
-import UserAvatar from '../../components/UserAvatar/user-avatar';
+import TicketEditsBlock from '../../components/TicketEditsBlock/ticket-edits-block';
+import TicketMetaBlock from '../../components/TicketMetaBlock/ticket-meta-block';
 import {
   TicketsActions,
   TicketsReducerAction,
 } from '../../state/actions/tickets.actions';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
-import { formatDate } from '../../utils/display.utils';
 import './ticket.page.scss';
 
 interface TicketPageParams {
   issueNumber: string;
 }
 
-const { Paragraph } = Typography;
+const { Paragraph, Title } = Typography;
+const { TabPane } = Tabs;
 
 const TicketPage: React.FC = () => {
   const { issueNumber } = useParams<TicketPageParams>();
@@ -41,12 +41,20 @@ const TicketPage: React.FC = () => {
     StoreStateType,
     TicketsState
   >((state) => state.tickets);
-  const { fetchTicketByIssueNumber } = new TicketsActions();
+  const { fetchTicketByIssueNumber, postTicketComment } = new TicketsActions();
 
   useEffect(() => {
     dispatch(fetchTicketByIssueNumber(issueNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
+
+  const onCommentSubmit = (values: { commentText: string }) => {
+    if (!ticket) {
+      return;
+    }
+
+    dispatch(postTicketComment(ticket?.id, values.commentText));
+  };
 
   const renderContent = () => {
     if (ticketLoading) {
@@ -83,56 +91,32 @@ const TicketPage: React.FC = () => {
             </Row>
           )}
 
-          <Descriptions bordered column={{ xxl: 2, md: 1, sm: 1, xs: 1 }}>
-            <Descriptions.Item label="Created At">
-              {formatDate(ticket.createdAt)}
-            </Descriptions.Item>
+          <TicketMetaBlock ticket={ticket} />
 
-            <Descriptions.Item label="Estimate">
-              {ticket.estimate != null && (
-                <EstimateBadge value={ticket.estimate} />
+          <div className="description-block">
+            <Title level={5}>Description</Title>
+
+            <Paragraph>
+              {ticket.description ?? (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="No description"
+                />
               )}
-              {ticket.estimate == null && 'No estimate yet'}
-            </Descriptions.Item>
+            </Paragraph>
+          </div>
 
-            <Descriptions.Item label="Author">
-              <Space>
-                <UserAvatar user={ticket.author} />
-                <span>
-                  {ticket.author.firstName} {ticket.author.lastName}
-                </span>
-              </Space>
-            </Descriptions.Item>
-
-            <Descriptions.Item label="Assignee">
-              {ticket.assignee && (
-                <Space>
-                  <UserAvatar user={ticket.assignee} />
-                  <span>
-                    {ticket.assignee.firstName} {ticket.assignee.lastName}
-                  </span>
-                </Space>
-              )}
-              {!ticket.assignee && 'Unassigned'}
-            </Descriptions.Item>
-
-            <Descriptions.Item label="Status">
-              <Tag color="green">{ticket.status.name}</Tag>
-            </Descriptions.Item>
-
-            <Descriptions.Item label="Ticket type">
-              {ticket.ticketType.name}
-            </Descriptions.Item>
-          </Descriptions>
-
-          <Paragraph>
-            {ticket.description ?? (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="No description"
+          <Tabs defaultActiveKey="comments">
+            <TabPane tab="Comments" key="comments">
+              <TicketCommentBlock
+                comments={ticket.comments}
+                onCommentSubmit={onCommentSubmit}
               />
-            )}
-          </Paragraph>
+            </TabPane>
+            <TabPane tab="History" key="edits">
+              <TicketEditsBlock edits={ticket.edits} />
+            </TabPane>
+          </Tabs>
         </Space>
       </>
     );

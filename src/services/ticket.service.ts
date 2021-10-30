@@ -7,6 +7,14 @@ class TicketService extends HttpClientService {
       .get<Ticket>(`/tickets/byissue/${issueNumber}`)
       .then((response) => response.data);
   }
+
+  addTicketComment(ticketId: string, text: string): Promise<Ticket> {
+    return TicketService.getClientInstance()
+      .post<Ticket>(`/tickets/${ticketId}/comments`, {
+        text,
+      })
+      .then((response) => response.data);
+  }
 }
 
 export default TicketService;
