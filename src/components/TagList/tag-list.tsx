@@ -1,10 +1,10 @@
-import { Space, Tag } from 'antd';
+import { Tag } from 'antd';
 import React from 'react';
 import { TagListProps } from './tag-list.types';
 
 const TagList = React.memo<TagListProps>(({ tags }) => {
   return (
-    <Space>
+    <div className="tag-list-container">
       {tags.map((tag) => {
         return (
           <Tag key={tag.id} color={`#${tag.color}`}>
@@ -12,7 +12,7 @@ const TagList = React.memo<TagListProps>(({ tags }) => {
           </Tag>
         );
       })}
-    </Space>
+    </div>
   );
 });
 

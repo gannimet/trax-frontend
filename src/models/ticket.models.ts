@@ -13,7 +13,7 @@ export interface Ticket {
   author: User;
   assignee?: User;
   status: TicketStatus;
-  ticketType: TicketTypeObj;
+  type: TicketTypeObj;
   tags: TicketTag[];
   comments: TicketComment[];
   edits: TicketEdit[];
@@ -52,7 +52,9 @@ export type TicketEditField =
   | 'ASSIGNEE'
   | 'SPRINT'
   | 'STATUS'
-  | 'TYPE';
+  | 'TYPE'
+  | 'ADD_TAG'
+  | 'REMOVE_TAG';
 
 export interface TicketEdit {
   id: string;

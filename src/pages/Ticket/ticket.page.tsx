@@ -1,5 +1,6 @@
 import {
   Alert,
+  Button,
   Col,
   Empty,
   Row,
@@ -41,7 +42,8 @@ const TicketPage: React.FC = () => {
     StoreStateType,
     TicketsState
   >((state) => state.tickets);
-  const { fetchTicketByIssueNumber, postTicketComment } = new TicketsActions();
+  const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
+    new TicketsActions();
 
   useEffect(() => {
     dispatch(fetchTicketByIssueNumber(issueNumber));
@@ -54,6 +56,20 @@ const TicketPage: React.FC = () => {
     }
 
     dispatch(postTicketComment(ticket?.id, values.commentText));
+  };
+
+  const onTestEditClick = () => {
+    if (!ticket) {
+      return;
+    }
+
+    dispatch(
+      editTicket(
+        ticket.id,
+        'TITLE',
+        '[FE/Solved] Loading error shown on teams page occasionally',
+      ),
+    );
   };
 
   const renderContent = () => {
@@ -92,6 +108,8 @@ const TicketPage: React.FC = () => {
           )}
 
           <TicketMetaBlock ticket={ticket} />
+
+          <Button onClick={onTestEditClick}>Editieren probieren</Button>
 
           <div className="description-block">
             <Title level={5}>Description</Title>

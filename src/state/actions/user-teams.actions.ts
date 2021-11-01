@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { UserTeamInfo } from '../../models/user.models';
-import UserService from '../../services/user.service';
+import TeamService from '../../services/team.service';
 
 export class UserTeamsActions {
   static readonly FETCH_TEAMS_OF_USER_SUCCESS = 'FETCH_TEAMS_OF_USER_SUCCESS';
@@ -9,13 +9,13 @@ export class UserTeamsActions {
   static readonly FETCH_TEAM_DETAILS_ERROR = 'FETCH_TEAM_DETAILS_ERROR';
   static readonly FETCH_TEAM_DETAILS_LOADING = 'FETCH_TEAM_DETAILS_LOADING';
 
-  userService = new UserService();
+  userService = new TeamService();
 
-  fetchTeamsOfUser = (userId: string) => {
+  fetchTeamsOfUser = () => {
     return (
       dispatch: Dispatch,
     ): Promise<FetchTeamsOfUserSuccessAction | FetchTeamsOfUserErrorAction> => {
-      return this.userService.getTeamsForUser(userId).then(
+      return this.userService.getTeamsForUser().then(
         (teamsInfos) => {
           return dispatch({
             type: UserTeamsActions.FETCH_TEAMS_OF_USER_SUCCESS as typeof UserTeamsActions.FETCH_TEAMS_OF_USER_SUCCESS,
@@ -32,7 +32,7 @@ export class UserTeamsActions {
     };
   };
 
-  fetchTeamDetailsOfUser = (userId: string, teamId: string) => {
+  fetchTeamDetailsOfUser = (teamId: string) => {
     return (
       dispatch: Dispatch,
     ): Promise<FetchTeamDetailsSuccessAction | FetchTeamDetailsErrorAction> => {
@@ -40,7 +40,7 @@ export class UserTeamsActions {
         type: UserTeamsActions.FETCH_TEAM_DETAILS_LOADING as typeof UserTeamsActions.FETCH_TEAM_DETAILS_LOADING,
       });
 
-      return this.userService.getTeamDetailsForUser(userId, teamId).then(
+      return this.userService.getTeamDetailsForUser(teamId).then(
         (teamInfos) => {
           return dispatch({
             type: UserTeamsActions.FETCH_TEAM_DETAILS_SUCCESS as typeof UserTeamsActions.FETCH_TEAM_DETAILS_SUCCESS,

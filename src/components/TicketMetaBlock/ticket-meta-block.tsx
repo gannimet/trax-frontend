@@ -43,7 +43,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(({ ticket }) => {
       </Descriptions.Item>
 
       <Descriptions.Item label="Ticket type">
-        {ticket.ticketType.name}
+        {ticket.type.name}
       </Descriptions.Item>
     </Descriptions>
   );

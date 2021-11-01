@@ -19,7 +19,7 @@ const SprintTicketListItem = React.memo<SprintTicketListItemProps>(
 
     return (
       <List.Item
-        className={`sprint-ticket-list-item ${ticket.ticketType.name.toLowerCase()}`}
+        className={`sprint-ticket-list-item ${ticket.type.name.toLowerCase()}`}
         onClick={onTicketClick}
       >
         <Row style={{ width: '100%' }} gutter={8} wrap={false} align="middle">

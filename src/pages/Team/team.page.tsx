@@ -18,7 +18,6 @@ import PageTitle from '../../components/PageTitle/page-title';
 import SprintTicketListFooter from '../../components/SprintTicketList/SprintTicketListFooter/sprint-ticket-list-footer';
 import SprintTicketListHeader from '../../components/SprintTicketList/SprintTicketListHeader/sprint-ticket-list-header';
 import SprintTicketListItem from '../../components/SprintTicketList/SprintTicketListItem/sprint-ticket-list-item';
-import { useCurrentUserId } from '../../hooks/use-auth';
 import { Sprint } from '../../models/team.models';
 import {
   UserTeamsActions,
@@ -38,17 +37,14 @@ const TeamPage: React.FC = () => {
   const { teamId } = useParams<TeamPageParams>();
   const dispatch: ThunkDispatch<StoreStateType, void, UserTeamsReducerAction> =
     useDispatch<Dispatch<UserTeamsReducerAction>>();
-  const currentUserId = useCurrentUserId();
   const { currentTeamInfos, currentTeamInfosError, currentTeamInfosLoading } =
     useSelector<StoreStateType, UserTeamsState>((state) => state.userTeams);
   const { fetchTeamDetailsOfUser } = new UserTeamsActions();
 
   useEffect(() => {
-    if (currentUserId) {
-      dispatch(fetchTeamDetailsOfUser(currentUserId, teamId));
-    }
+    dispatch(fetchTeamDetailsOfUser(teamId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId, teamId]);
+  }, [teamId]);
 
   const renderContent = () => {
     if (currentTeamInfosLoading) {

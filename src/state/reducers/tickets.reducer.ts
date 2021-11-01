@@ -11,11 +11,14 @@ export interface TicketsState {
   ticketLoading: boolean;
   postCommentLoading: boolean;
   postCommentError?: Error;
+  editTicketLoading: boolean;
+  editTicketError?: Error;
 }
 
 export const ticketsInitialState: TicketsState = {
   ticketLoading: false,
   postCommentLoading: false,
+  editTicketLoading: false,
 };
 
 export const ticketsReducer: Reducer<TicketsState, TicketsReducerAction> = (
@@ -62,6 +65,25 @@ export const ticketsReducer: Reducer<TicketsState, TicketsReducerAction> = (
         ...state,
         postCommentLoading: true,
         postCommentError: undefined,
+      };
+    case TicketsActions.EDIT_TICKET_SUCCESS:
+      return {
+        ...state,
+        ticket: action.ticket,
+        editTicketLoading: false,
+        editTicketError: undefined,
+      };
+    case TicketsActions.EDIT_TICKET_ERROR:
+      return {
+        ...state,
+        editTicketLoading: false,
+        editTicketError: action.error,
+      };
+    case TicketsActions.EDIT_TICKET_LOADING:
+      return {
+        ...state,
+        editTicketLoading: true,
+        editTicketError: undefined,
       };
     default:
       return { ...state };

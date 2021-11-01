@@ -1,4 +1,4 @@
-import { Ticket } from '../models/ticket.models';
+import { Ticket, TicketEditField } from '../models/ticket.models';
 import HttpClientService from './http-client.service';
 
 class TicketService extends HttpClientService {
@@ -12,6 +12,19 @@ class TicketService extends HttpClientService {
     return TicketService.getClientInstance()
       .post<Ticket>(`/tickets/${ticketId}/comments`, {
         text,
+      })
+      .then((response) => response.data);
+  }
+
+  editTicket(
+    ticketId: string,
+    field: TicketEditField,
+    newValue: string,
+  ): Promise<Ticket> {
+    return TicketService.getClientInstance()
+      .put<Ticket>(`/tickets/${ticketId}`, {
+        field,
+        newValue,
       })
       .then((response) => response.data);
   }

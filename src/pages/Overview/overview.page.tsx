@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import PageTitle from '../../components/PageTitle/page-title';
-import { useCurrentUserId } from '../../hooks/use-auth';
 import {
   UserTeamsActions,
   UserTeamsReducerAction,
@@ -16,7 +15,6 @@ import { StoreStateType } from '../../state/root.reducer';
 const OverviewPage: React.FC = () => {
   const dispatch: ThunkDispatch<StoreStateType, void, UserTeamsReducerAction> =
     useDispatch<Dispatch<UserTeamsReducerAction>>();
-  const currentUserId = useCurrentUserId();
   const { allTeamsInfos, allTeamsInfosError } = useSelector<
     StoreStateType,
     UserTeamsState
@@ -25,11 +23,9 @@ const OverviewPage: React.FC = () => {
   const { fetchTeamsOfUser } = new UserTeamsActions();
 
   useEffect(() => {
-    if (currentUserId) {
-      dispatch(fetchTeamsOfUser(currentUserId));
-    }
+    dispatch(fetchTeamsOfUser());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId]);
+  }, []);
 
   const hasTeams = allTeamsInfos && allTeamsInfos.length > 0;
 

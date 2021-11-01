@@ -9,10 +9,8 @@ const TicketDetailTitle = React.memo<TicketDetailTitleProps>(({ ticket }) => {
       <Space>
         <span className="ticket-issue-number">#{ticket.issueNumber}</span>
         <span>
-          <span
-            className={`ticket-type ${ticket.ticketType?.name.toLowerCase()}`}
-          >
-            [{ticket.ticketType?.name.toUpperCase()}]
+          <span className={`ticket-type ${ticket.type?.name.toLowerCase()}`}>
+            [{ticket.type?.name.toUpperCase()}]
           </span>{' '}
           {ticket.title}
         </span>
