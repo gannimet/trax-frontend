@@ -1,8 +1,8 @@
 import { Descriptions, Space, Tag } from 'antd';
 import React from 'react';
-import { formatDate } from '../../utils/display.utils';
-import EstimateBadge from '../EstimateBadge/estimate-badge';
-import UserAvatar from '../UserAvatar/user-avatar';
+import { formatDate } from '../../../utils/display.utils';
+import EstimateBadge from '../../EstimateBadge/estimate-badge';
+import UserAvatar from '../../UserAvatar/user-avatar';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(({ ticket }) => {

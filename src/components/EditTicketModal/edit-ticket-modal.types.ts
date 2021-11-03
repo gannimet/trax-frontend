@@ -1,5 +1,6 @@
 import { Ticket } from '../../models/ticket.models';
 
-export interface TicketMetaBlockProps {
+export interface EditTicketModalProps {
+  visible: boolean;
   ticket: Ticket;
 }

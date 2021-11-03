@@ -7,11 +7,12 @@ import {
   List,
   Row,
   Space,
+  Tooltip,
   Typography,
 } from 'antd';
 import React from 'react';
-import { formatDate } from '../../utils/display.utils';
-import UserAvatar from '../UserAvatar/user-avatar';
+import { formatDate, formatRelativeDate } from '../../../utils/display.utils';
+import UserAvatar from '../../UserAvatar/user-avatar';
 import { TicketCommentBlockProps } from './ticket-comment-block.types';
 
 const { Title } = Typography;
@@ -62,7 +63,11 @@ const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
                         author={`${comment.author.firstName} ${comment.author.lastName}`}
                         avatar={<UserAvatar user={comment.author} />}
                         content={comment.text}
-                        datetime={formatDate(comment.createdAt)}
+                        datetime={
+                          <Tooltip title={formatDate(comment.createdAt)}>
+                            {formatRelativeDate(comment.createdAt)}
+                          </Tooltip>
+                        }
                       />
                     </List.Item>
                   );

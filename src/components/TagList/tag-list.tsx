@@ -1,5 +1,6 @@
 import { Tag } from 'antd';
 import React from 'react';
+import './tag-list.scss';
 import { TagListProps } from './tag-list.types';
 
 const TagList = React.memo<TagListProps>(({ tags }) => {

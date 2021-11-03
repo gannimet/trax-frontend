@@ -1,3 +1,4 @@
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
@@ -55,7 +56,11 @@ const LoginPage: React.FC = () => {
                 { required: true, message: 'Please enter your password' },
               ]}
             >
-              <Input />
+              <Input.Password
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
             </Form.Item>
 
             <Form.Item>

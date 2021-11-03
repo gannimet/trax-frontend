@@ -17,3 +17,9 @@
     color: $storyColor;
   }
 }
+
+@media (max-width: 1000px) {
+  .ant-btn > .edit-ticket-btn-text {
+    display: none;
+  }
+}

@@ -1,4 +1,4 @@
-import { TicketComment } from '../../models/ticket.models';
+import { TicketComment } from '../../../models/ticket.models';
 
 export interface TicketCommentBlockProps {
   comments: TicketComment[];

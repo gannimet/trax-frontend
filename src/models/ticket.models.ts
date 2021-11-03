@@ -61,4 +61,6 @@ export interface TicketEdit {
   editor: User;
   field: TicketEditField;
   editedAt: string;
+  previousValue?: string;
+  newValue?: string;
 }

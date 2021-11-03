@@ -1,24 +1,27 @@
+import { FormOutlined } from '@ant-design/icons';
 import {
   Alert,
   Button,
   Col,
   Empty,
+  message,
   Row,
   Skeleton,
   Space,
   Tabs,
   Typography,
 } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import EditTicketModal from '../../components/EditTicketModal/edit-ticket-modal';
 import TagList from '../../components/TagList/tag-list';
-import TicketCommentBlock from '../../components/TicketCommentBlock/ticket-comment-block';
+import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock/ticket-comment-block';
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
-import TicketEditsBlock from '../../components/TicketEditsBlock/ticket-edits-block';
-import TicketMetaBlock from '../../components/TicketMetaBlock/ticket-meta-block';
+import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
+import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
 import {
   TicketsActions,
   TicketsReducerAction,
@@ -42,34 +45,29 @@ const TicketPage: React.FC = () => {
     StoreStateType,
     TicketsState
   >((state) => state.tickets);
-  const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
-    new TicketsActions();
+  const { fetchTicketByIssueNumber, postTicketComment } = new TicketsActions();
+  const [showEditTagsButton, setShowEditTagsButton] = useState(false);
+  const [showEditTicketModal, setShowEditTicketModal] = useState(false);
 
   useEffect(() => {
     dispatch(fetchTicketByIssueNumber(issueNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
 
+  const onHoverTagList = (shouldShowButton: boolean) => () => {
+    setShowEditTagsButton(shouldShowButton);
+  };
+
   const onCommentSubmit = (values: { commentText: string }) => {
     if (!ticket) {
       return;
     }
 
-    dispatch(postTicketComment(ticket?.id, values.commentText));
-  };
-
-  const onTestEditClick = () => {
-    if (!ticket) {
-      return;
-    }
-
-    dispatch(
-      editTicket(
-        ticket.id,
-        'TITLE',
-        '[FE/Solved] Loading error shown on teams page occasionally',
-      ),
-    );
+    const hide = message.loading('Posting comment …');
+    dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
+      hide();
+      message.success('Comment posted successfully!', 2);
+    });
   };
 
   const renderContent = () => {
@@ -96,7 +94,20 @@ const TicketPage: React.FC = () => {
 
     return (
       <>
-        <TicketDetailTitle ticket={ticket} />
+        <Row wrap={false}>
+          <Col flex="auto">
+            <TicketDetailTitle ticket={ticket} />
+          </Col>
+          <Col flex="150px" style={{ textAlign: 'right' }}>
+            <Button
+              icon={<FormOutlined />}
+              size="middle"
+              onClick={() => setShowEditTicketModal(true)}
+            >
+              <span className="edit-ticket-btn-text">Edit ticket</span>
+            </Button>
+          </Col>
+        </Row>
 
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {ticket.tags && ticket.tags.length > 0 && (
@@ -107,9 +118,9 @@ const TicketPage: React.FC = () => {
             </Row>
           )}
 
-          <TicketMetaBlock ticket={ticket} />
+          <EditTicketModal visible={showEditTicketModal} ticket={ticket} />
 
-          <Button onClick={onTestEditClick}>Editieren probieren</Button>
+          <TicketMetaBlock ticket={ticket} />
 
           <div className="description-block">
             <Title level={5}>Description</Title>
