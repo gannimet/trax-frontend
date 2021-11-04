@@ -1,0 +1,19 @@
+.ticket-title-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .ticket-issue-number {
+    flex-grow: 0;
+    margin-right: 8px;
+  }
+
+  .ticket-type {
+    flex-grow: 0;
+    margin-right: 8px;
+  }
+
+  .title-text {
+    flex-grow: 1;
+  }
+}

@@ -1,7 +1,5 @@
-import { FormOutlined } from '@ant-design/icons';
 import {
   Alert,
-  Button,
   Col,
   Empty,
   message,
@@ -11,12 +9,11 @@ import {
   Tabs,
   Typography,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import EditTicketModal from '../../components/EditTicketModal/edit-ticket-modal';
 import TagList from '../../components/TagList/tag-list';
 import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock/ticket-comment-block';
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
@@ -41,21 +38,33 @@ const TicketPage: React.FC = () => {
   const { issueNumber } = useParams<TicketPageParams>();
   const dispatch: ThunkDispatch<StoreStateType, void, TicketsReducerAction> =
     useDispatch<Dispatch<TicketsReducerAction>>();
-  const { ticket, ticketError, ticketLoading } = useSelector<
+  const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
     StoreStateType,
     TicketsState
   >((state) => state.tickets);
-  const { fetchTicketByIssueNumber, postTicketComment } = new TicketsActions();
-  const [showEditTagsButton, setShowEditTagsButton] = useState(false);
-  const [showEditTicketModal, setShowEditTicketModal] = useState(false);
+  const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
+    new TicketsActions();
 
   useEffect(() => {
     dispatch(fetchTicketByIssueNumber(issueNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
 
-  const onHoverTagList = (shouldShowButton: boolean) => () => {
-    setShowEditTagsButton(shouldShowButton);
+  const titleEdited = (newTitle: string) => {
+    if (!ticket || ticket.title === newTitle) {
+      return;
+    }
+
+    const hide = message.loading('Saving ...');
+    dispatch(editTicket(ticket.id, 'TITLE', newTitle)).then(() => {
+      hide();
+
+      if (editTicketError) {
+        message.error('Failed to edit title');
+      } else {
+        message.success('Saved');
+      }
+    });
   };
 
   const onCommentSubmit = (values: { commentText: string }) => {
@@ -94,20 +103,7 @@ const TicketPage: React.FC = () => {
 
     return (
       <>
-        <Row wrap={false}>
-          <Col flex="auto">
-            <TicketDetailTitle ticket={ticket} />
-          </Col>
-          <Col flex="150px" style={{ textAlign: 'right' }}>
-            <Button
-              icon={<FormOutlined />}
-              size="middle"
-              onClick={() => setShowEditTicketModal(true)}
-            >
-              <span className="edit-ticket-btn-text">Edit ticket</span>
-            </Button>
-          </Col>
-        </Row>
+        <TicketDetailTitle ticket={ticket} onTitleEdit={titleEdited} />
 
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {ticket.tags && ticket.tags.length > 0 && (
@@ -117,8 +113,6 @@ const TicketPage: React.FC = () => {
               </Col>
             </Row>
           )}
-
-          <EditTicketModal visible={showEditTicketModal} ticket={ticket} />
 
           <TicketMetaBlock ticket={ticket} />
 
