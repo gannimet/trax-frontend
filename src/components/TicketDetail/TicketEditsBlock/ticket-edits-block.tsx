@@ -22,16 +22,19 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ edits }) => {
             bordered
             dataSource={edits}
             renderItem={(edit) => {
+              const previousValue = edit.previousValue ?? edit.previousNumber;
+              const newValue = edit.newValue ?? edit.newNumber;
+
               return (
                 <List.Item>
-                  {edit.previousValue && edit.newValue && (
+                  {previousValue && newValue && (
                     <Comment
                       author={getTicketEditingDescription(edit)}
                       avatar={<UserAvatar user={edit.editor} />}
                       content={
                         <ReactDiffViewer
-                          oldValue={edit.previousValue}
-                          newValue={edit.newValue}
+                          oldValue={String(previousValue)}
+                          newValue={String(newValue)}
                           splitView={true}
                           compareMethod={DiffMethod.WORDS_WITH_SPACE}
                           hideLineNumbers={true}

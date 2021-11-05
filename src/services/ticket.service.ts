@@ -1,3 +1,4 @@
+import { ValueType } from '../components/InlineEdit/TextInlineEdit/text-inline-edit.types';
 import { Ticket, TicketEditField } from '../models/ticket.models';
 import HttpClientService from './http-client.service';
 
@@ -19,7 +20,7 @@ class TicketService extends HttpClientService {
   editTicket(
     ticketId: string,
     field: TicketEditField,
-    newValue: string,
+    newValue: ValueType,
   ): Promise<Ticket> {
     return TicketService.getClientInstance()
       .put<Ticket>(`/tickets/${ticketId}`, {

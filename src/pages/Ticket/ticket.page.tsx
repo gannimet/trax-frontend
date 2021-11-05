@@ -14,11 +14,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { ValueType } from '../../components/InlineEdit/TextInlineEdit/text-inline-edit.types';
 import TagList from '../../components/TagList/tag-list';
 import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock/ticket-comment-block';
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
 import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
+import { TicketEditField } from '../../models/ticket.models';
 import {
   TicketsActions,
   TicketsReducerAction,
@@ -50,23 +52,6 @@ const TicketPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
 
-  const titleEdited = (newTitle: string) => {
-    if (!ticket || ticket.title === newTitle) {
-      return;
-    }
-
-    const hide = message.loading('Saving ...');
-    dispatch(editTicket(ticket.id, 'TITLE', newTitle)).then(() => {
-      hide();
-
-      if (editTicketError) {
-        message.error('Failed to edit title');
-      } else {
-        message.success('Saved');
-      }
-    });
-  };
-
   const onCommentSubmit = (values: { commentText: string }) => {
     if (!ticket) {
       return;
@@ -76,6 +61,23 @@ const TicketPage: React.FC = () => {
     dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
       hide();
       message.success('Comment posted successfully!', 2);
+    });
+  };
+
+  const onFieldEdited = (field: TicketEditField, value: ValueType) => {
+    if (!ticket) {
+      return;
+    }
+
+    const hide = message.loading('Saving ...');
+    dispatch(editTicket(ticket.id, field, value)).then(() => {
+      hide();
+
+      if (editTicketError) {
+        message.error('An error occured.');
+      } else {
+        message.success('Saved.');
+      }
     });
   };
 
@@ -103,7 +105,10 @@ const TicketPage: React.FC = () => {
 
     return (
       <>
-        <TicketDetailTitle ticket={ticket} onTitleEdit={titleEdited} />
+        <TicketDetailTitle
+          ticket={ticket}
+          onTitleEdit={(newTitle) => onFieldEdited('TITLE', newTitle)}
+        />
 
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {ticket.tags && ticket.tags.length > 0 && (
@@ -114,7 +119,7 @@ const TicketPage: React.FC = () => {
             </Row>
           )}
 
-          <TicketMetaBlock ticket={ticket} />
+          <TicketMetaBlock ticket={ticket} onEditSubmit={onFieldEdited} />
 
           <div className="description-block">
             <Title level={5}>Description</Title>

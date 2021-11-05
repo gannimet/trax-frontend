@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { ValueType } from '../../components/InlineEdit/TextInlineEdit/text-inline-edit.types';
 import { Ticket, TicketEditField } from '../../models/ticket.models';
 import TicketService from '../../services/ticket.service';
 
@@ -75,7 +76,11 @@ export class TicketsActions {
     };
   };
 
-  editTicket = (ticketId: string, field: TicketEditField, newValue: string) => {
+  editTicket = (
+    ticketId: string,
+    field: TicketEditField,
+    newValue: ValueType,
+  ) => {
     return (
       dispatch: Dispatch,
     ): Promise<

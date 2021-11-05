@@ -40,6 +40,7 @@ export const getTicketEditingDescription = (
     case 'ASSIGNEE':
     case 'STATUS':
     case 'TYPE':
+    case 'ESTIMATE':
       return (
         <>
           {userLink} changed {field.toLowerCase()}

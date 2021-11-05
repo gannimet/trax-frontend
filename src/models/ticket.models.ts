@@ -49,6 +49,7 @@ export interface TicketComment {
 export type TicketEditField =
   | 'TITLE'
   | 'DESCRIPTION'
+  | 'ESTIMATE'
   | 'ASSIGNEE'
   | 'SPRINT'
   | 'STATUS'
@@ -63,4 +64,6 @@ export interface TicketEdit {
   editedAt: string;
   previousValue?: string;
   newValue?: string;
+  previousNumber?: number;
+  newNumber?: number;
 }

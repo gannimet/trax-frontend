@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
-import { Button, Input, InputNumber, Space } from 'antd';
-import React, { BaseSyntheticEvent, useState } from 'react';
+import { Button, Input, Space } from 'antd';
+import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
 import './text-inline-edit.scss';
 import { TextInlineEditProps } from './text-inline-edit.types';
 
@@ -8,49 +8,77 @@ const TextInlineEdit = React.memo<TextInlineEditProps>(
   ({ onCancel, onSubmit, value, children, className, isNumeric = false }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [isEditing]);
 
     const onInputChange = (e: BaseSyntheticEvent) => {
       setInputValue(e.target.value);
     };
 
-    const onInputNumberChange = (n: number) => {
-      console.log('new value:', n);
-      setInputValue(n);
-    };
-
-    const cancelClicked = () => {
+    const onCancelEdit = () => {
       setInputValue(value);
       setIsEditing(false);
       onCancel && onCancel();
     };
 
-    const submitClicked = () => {
+    const onSubmitEdit = () => {
       setIsEditing(false);
-      onSubmit && onSubmit(inputValue);
+
+      if (!onSubmit) {
+        return;
+      }
+
+      if (inputValue == null) {
+        onSubmit(null);
+
+        return;
+      }
+
+      if (isNumeric) {
+        if (typeof inputValue === 'string') {
+          onSubmit(parseFloat(inputValue));
+
+          return;
+        }
+      }
+
+      onSubmit(inputValue);
+    };
+
+    const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Escape') {
+        onCancelEdit();
+      } else if (e.key === 'Enter') {
+        onSubmitEdit();
+      }
     };
 
     return isEditing ? (
       <span className={`inline-editing-container ${className}`}>
-        {isNumeric ? (
-          <InputNumber
-            type="number"
-            min={0}
-            max={100}
-            defaultValue={inputValue as number}
-            onChange={onInputNumberChange}
-          />
-        ) : (
-          <Input defaultValue={inputValue as string} onChange={onInputChange} />
-        )}
+        <Input
+          defaultValue={inputValue as string}
+          onChange={onInputChange}
+          type={isNumeric ? 'number' : 'text'}
+          pattern={isNumeric ? '^[0-9]*$' : undefined}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          ref={inputRef}
+          onKeyUp={onKeyUp}
+        />
         <Button
           icon={<CloseOutlined />}
           type="default"
-          onClick={cancelClicked}
+          onClick={onCancelEdit}
         />
         <Button
           icon={<CheckOutlined />}
           type="primary"
-          onClick={submitClicked}
+          onClick={onSubmitEdit}
         />
       </span>
     ) : (

@@ -1,6 +1,6 @@
 import React from 'react';
 
-type ValueType = string | number | undefined | null;
+export type ValueType = string | number | undefined | null;
 
 export interface TextInlineEditProps {
   onCancel?(): void;
