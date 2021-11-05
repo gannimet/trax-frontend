@@ -142,7 +142,7 @@ const TicketPage: React.FC = () => {
               />
             </TabPane>
             <TabPane tab="History" key="edits">
-              <TicketEditsBlock edits={ticket.edits} />
+              <TicketEditsBlock ticket={ticket} />
             </TabPane>
           </Tabs>
         </Space>

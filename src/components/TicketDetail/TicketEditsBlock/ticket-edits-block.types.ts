@@ -1,5 +1,5 @@
-import { TicketEdit } from '../../../models/ticket.models';
+import { Ticket } from '../../../models/ticket.models';
 
 export interface TicketEditsBlockProps {
-  edits: TicketEdit[];
+  ticket: Ticket;
 }

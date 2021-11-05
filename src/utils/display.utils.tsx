@@ -30,7 +30,7 @@ export const getTicketEditingDescription = (
   const { editor, field } = edit;
   const userLink = (
     <Link
-      to={`/users/${editor.id}`}
+      to={`/user/${editor.id}`}
     >{`${editor.firstName} ${editor.lastName}`}</Link>
   );
 
