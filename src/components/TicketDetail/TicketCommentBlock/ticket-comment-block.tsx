@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { formatDate, formatRelativeDate } from '../../../utils/display.utils';
 import UserAvatar from '../../UserAvatar/user-avatar';
+import UserLink from '../../UserLink/user-link';
 import { TicketCommentBlockProps } from './ticket-comment-block.types';
 
 const { Title } = Typography;
@@ -60,7 +61,7 @@ const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
                   return (
                     <List.Item>
                       <Comment
-                        author={`${comment.author.firstName} ${comment.author.lastName}`}
+                        author={<UserLink user={comment.author} />}
                         avatar={<UserAvatar user={comment.author} />}
                         content={comment.text}
                         datetime={

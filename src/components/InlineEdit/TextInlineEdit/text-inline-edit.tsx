@@ -41,13 +41,19 @@ const TextInlineEdit = React.memo<TextInlineEditProps>(
 
       if (isNumeric) {
         if (typeof inputValue === 'string') {
-          onSubmit(parseFloat(inputValue));
+          const parsedValue = parseFloat(inputValue);
+
+          if (parsedValue !== value) {
+            onSubmit(parsedValue);
+          }
 
           return;
         }
       }
 
-      onSubmit(inputValue);
+      if (inputValue !== value) {
+        onSubmit(inputValue);
+      }
     };
 
     const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {

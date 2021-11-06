@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import UserLink from '../components/UserLink/user-link';
 import { TicketEdit } from '../models/ticket.models';
 import { User } from '../models/user.models';
 
@@ -28,11 +28,7 @@ export const getTicketEditingDescription = (
   edit: TicketEdit,
 ): React.ReactNode => {
   const { editor, field } = edit;
-  const userLink = (
-    <Link
-      to={`/user/${editor.id}`}
-    >{`${editor.firstName} ${editor.lastName}`}</Link>
-  );
+  const userLink = <UserLink user={editor} />;
 
   switch (field) {
     case 'TITLE':
