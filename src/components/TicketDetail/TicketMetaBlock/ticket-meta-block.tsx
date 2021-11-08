@@ -7,7 +7,7 @@ import UserAvatar from '../../UserAvatar/user-avatar';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
-  ({ ticket, onEditSubmit }) => {
+  ({ ticket, onEditSubmit, alloweEdits }) => {
     return (
       <Descriptions
         bordered
@@ -23,6 +23,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
           <TextInlineEdit
             value={ticket.estimate}
             isNumeric
+            allowEdits={alloweEdits}
             onSubmit={(value) => {
               onEditSubmit('ESTIMATE', value);
             }}

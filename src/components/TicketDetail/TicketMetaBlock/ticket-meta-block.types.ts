@@ -4,4 +4,5 @@ import { ValueType } from '../../InlineEdit/TextInlineEdit/text-inline-edit.type
 export interface TicketMetaBlockProps {
   ticket: Ticket;
   onEditSubmit(field: TicketEditField, value: ValueType): void;
+  alloweEdits: boolean;
 }

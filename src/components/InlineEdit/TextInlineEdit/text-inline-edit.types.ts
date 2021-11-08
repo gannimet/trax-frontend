@@ -9,4 +9,5 @@ export interface TextInlineEditProps {
   children?: React.ReactNode;
   className?: string;
   isNumeric?: boolean;
+  allowEdits?: boolean;
 }

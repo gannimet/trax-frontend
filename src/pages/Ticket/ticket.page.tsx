@@ -20,6 +20,7 @@ import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
 import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
+import { useCurrentUserId } from '../../hooks/use-auth';
 import { TicketEditField } from '../../models/ticket.models';
 import {
   TicketsActions,
@@ -46,6 +47,7 @@ const TicketPage: React.FC = () => {
   >((state) => state.tickets);
   const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
     new TicketsActions();
+  const currentUserId = useCurrentUserId();
 
   useEffect(() => {
     dispatch(fetchTicketByIssueNumber(issueNumber));
@@ -103,10 +105,15 @@ const TicketPage: React.FC = () => {
       return null;
     }
 
+    const canEditTickets =
+      ticket.sprint?.team?.users?.find((user) => user.id === currentUserId)
+        ?.TeamUser?.canEditTickets ?? false;
+
     return (
       <>
         <TicketDetailTitle
           ticket={ticket}
+          allowEdits={canEditTickets}
           onTitleEdit={(newTitle) => onFieldEdited('TITLE', newTitle)}
         />
 
@@ -119,7 +126,11 @@ const TicketPage: React.FC = () => {
             </Row>
           )}
 
-          <TicketMetaBlock ticket={ticket} onEditSubmit={onFieldEdited} />
+          <TicketMetaBlock
+            ticket={ticket}
+            alloweEdits={canEditTickets}
+            onEditSubmit={onFieldEdited}
+          />
 
           <div className="description-block">
             <Title level={5}>Description</Title>

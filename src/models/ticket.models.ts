@@ -1,3 +1,4 @@
+import { Sprint } from './team.models';
 import { User } from './user.models';
 
 export interface Ticket {
@@ -10,6 +11,7 @@ export interface Ticket {
   assigneeId: string;
   statusId: string;
   sprintId: string;
+  sprint?: Sprint;
   author: User;
   assignee?: User;
   status: TicketStatus;

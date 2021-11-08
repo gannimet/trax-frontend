@@ -8,6 +8,7 @@ export interface Sprint {
   active: boolean;
   sortIndex: number;
   teamId: string;
+  team?: Team;
   tickets: Ticket[];
 }
 

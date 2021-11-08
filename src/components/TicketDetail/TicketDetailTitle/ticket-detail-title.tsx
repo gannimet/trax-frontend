@@ -5,7 +5,7 @@ import './ticket-detail-title.scss';
 import { TicketDetailTitleProps } from './ticket-detail-title.types';
 
 const TicketDetailTitle = React.memo<TicketDetailTitleProps>(
-  ({ ticket, onTitleEdit }) => {
+  ({ ticket, onTitleEdit, allowEdits }) => {
     return (
       <PageTitle>
         <div className="ticket-title-container">
@@ -16,6 +16,7 @@ const TicketDetailTitle = React.memo<TicketDetailTitleProps>(
           <TextInlineEdit
             className="title-text"
             value={ticket.title}
+            allowEdits={allowEdits}
             onSubmit={onTitleEdit}
           >
             {ticket.title}

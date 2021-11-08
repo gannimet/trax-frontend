@@ -20,7 +20,9 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
 
   return (
     <div className="edits-block-container">
-      <Title level={5}>{edits.length} Edits</Title>
+      <Title level={5} style={{ marginBottom: '32px' }}>
+        {edits.length} Edits
+      </Title>
 
       <Row>
         <Col xs={24} sm={24} md={24} lg={16} xl={12}>
