@@ -1,13 +1,11 @@
-import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
-import { Button, Input, Space } from 'antd';
-import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react';
-import { useClickOutside } from '../../../hooks/use-click-outside';
+import { Input } from 'antd';
+import React, { BaseSyntheticEvent, useRef, useState } from 'react';
+import BaseInlineEdit from '../base-inline-edit';
 import './text-inline-edit.scss';
 import { TextInlineEditProps } from './text-inline-edit.types';
 
 const TextInlineEdit = React.memo<TextInlineEditProps>(
   ({
-    onCancel,
     onSubmit,
     value,
     children,
@@ -15,34 +13,24 @@ const TextInlineEdit = React.memo<TextInlineEditProps>(
     isNumeric = false,
     allowEdits = true,
   }) => {
-    const [isEditing, setIsEditing] = useState(false);
     const [inputValue, setInputValue] = useState(value);
     const inputRef = useRef<HTMLInputElement>(null);
-    const containerRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, [isEditing]);
-
-    useClickOutside(containerRef, () => {
-      setIsEditing(false);
-    });
 
     const onInputChange = (e: BaseSyntheticEvent) => {
       setInputValue(e.target.value);
     };
 
+    const onStartEditing = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
     const onCancelEdit = () => {
       setInputValue(value);
-      setIsEditing(false);
-      onCancel && onCancel();
     };
 
     const onSubmitEdit = () => {
-      setIsEditing(false);
-
       if (!onSubmit) {
         return;
       }
@@ -70,40 +58,15 @@ const TextInlineEdit = React.memo<TextInlineEditProps>(
       }
     };
 
-    const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Escape') {
-        onCancelEdit();
-      } else if (e.key === 'Enter') {
-        onSubmitEdit();
-      }
-    };
-
-    const renderDisplayMode = () => {
-      return allowEdits ? (
-        <Space className={className}>
-          <span
-            style={{ cursor: 'pointer' }}
-            onClick={() => setIsEditing(true)}
-          >
-            {children ? children : value}
-          </span>
-          <Button
-            icon={<FormOutlined />}
-            size="small"
-            onClick={() => setIsEditing(true)}
-          />
-        </Space>
-      ) : (
-        <>{children ? children : value}</>
-      );
-    };
-
-    const renderEditMode = () => {
-      return (
-        <span
-          ref={containerRef}
-          className={`inline-editing-container ${className}`}
-        >
+    return (
+      <BaseInlineEdit
+        allowEdits={allowEdits}
+        value={value}
+        className={className}
+        onCancel={onCancelEdit}
+        onSubmit={onSubmitEdit}
+        onStartEditing={onStartEditing}
+        editingView={
           <Input
             defaultValue={inputValue as string}
             onChange={onInputChange}
@@ -112,23 +75,12 @@ const TextInlineEdit = React.memo<TextInlineEditProps>(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             ref={inputRef}
-            onKeyUp={onKeyUp}
           />
-          <Button
-            icon={<CloseOutlined />}
-            type="default"
-            onClick={onCancelEdit}
-          />
-          <Button
-            icon={<CheckOutlined />}
-            type="primary"
-            onClick={onSubmitEdit}
-          />
-        </span>
-      );
-    };
-
-    return isEditing ? renderEditMode() : renderDisplayMode();
+        }
+      >
+        {children}
+      </BaseInlineEdit>
+    );
   },
 );
 
