@@ -5,7 +5,7 @@ import {
   IdcardTwoTone,
   TagTwoTone,
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
+import { Breadcrumb, Layout, Menu, Space } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
@@ -41,6 +41,7 @@ const FullPageLayout: React.FC = ({ children }) => {
   const {
     firstName,
     lastName,
+    avatar,
     id: userId,
   } = authState.authenticationInfo?.tokenContents;
   const { logout } = new AuthActions();
@@ -61,14 +62,16 @@ const FullPageLayout: React.FC = ({ children }) => {
           <Menu.Item key="3">nav 3</Menu.Item>
           <SubMenu
             key="sub-nav"
-            title={`${firstName} ${lastName}`}
             icon={
-              <>
+              <Space>
                 <UserAvatar
                   size="small"
-                  user={{ firstName, lastName, id: userId } as User}
-                />{' '}
-              </>
+                  user={{ firstName, lastName, avatar, id: userId } as User}
+                />
+                <span>
+                  {firstName} {lastName}
+                </span>
+              </Space>
             }
             style={{ marginLeft: 'auto' }}
           >

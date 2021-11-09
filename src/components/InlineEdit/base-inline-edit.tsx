@@ -24,7 +24,7 @@ const BaseInlineEdit = React.memo<BaseInlineEditProps>(
 
     useEffect(() => {
       onStartEditing && onStartEditing();
-    }, [isEditing]);
+    }, [onStartEditing, isEditing]);
 
     const onCancelEdit = () => {
       setIsEditing(false);

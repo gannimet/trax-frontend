@@ -7,6 +7,7 @@ export interface TokenContents {
   email: string;
   firstName: string;
   lastName: string;
+  avatar: string;
   exp: number;
   iat: number;
 }

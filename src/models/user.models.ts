@@ -6,7 +6,7 @@ export interface User {
   lastName: string;
   email: string;
   emailVerified: boolean;
-  avatar: null;
+  avatar: string;
   roleId: string;
   role: Role;
   TeamUser?: UserTeamInfo;
