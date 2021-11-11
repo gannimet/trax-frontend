@@ -2,12 +2,15 @@ export interface LoginResponse {
   accessToken: string;
 }
 
-export interface TokenContents {
+export interface AuthIdentity {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
   avatar: string;
+}
+
+export interface TokenContents extends AuthIdentity {
   exp: number;
   iat: number;
 }

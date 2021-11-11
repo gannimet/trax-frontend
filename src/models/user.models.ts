@@ -1,12 +1,8 @@
+import { AuthIdentity } from './auth.models';
 import { Team } from './team.models';
 
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+export interface User extends AuthIdentity {
   emailVerified: boolean;
-  avatar: string;
   roleId: string;
   role: Role;
   TeamUser?: UserTeamInfo;

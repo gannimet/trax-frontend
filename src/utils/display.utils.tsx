@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
 import React from 'react';
 import UserLink from '../components/UserLink/user-link';
+import { AuthIdentity } from '../models/auth.models';
 import { TicketEdit } from '../models/ticket.models';
-import { User } from '../models/user.models';
 
 dayjs.extend(RelativeTime);
 
-export const getUserInitials = (user: User): string => {
+export const getUserInitials = (user: AuthIdentity): string => {
   return `${user.firstName.charAt(0).toUpperCase()}${user.lastName
     .charAt(0)
     .toUpperCase()}`;

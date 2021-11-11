@@ -1,11 +1,10 @@
 import React from 'react';
-import { ValueType } from './text-inline-edit.types';
 
-export interface BaseInlineEditProps {
+export interface BaseInlineEditProps<V> {
   allowEdits?: boolean;
   editingView: React.ReactNode;
   children: React.ReactNode;
-  value: ValueType;
+  value: V | null | undefined;
   className?: string;
   onCancel?(): void;
   onSubmit?(): void;

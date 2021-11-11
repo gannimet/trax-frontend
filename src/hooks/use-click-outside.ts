@@ -4,6 +4,8 @@ export const useClickOutside = (
   ref: React.RefObject<HTMLElement>,
   callback: () => void,
 ): void => {
+  const rootDiv = document.getElementById('root');
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!ref.current || ref.current.contains(event.target as Node)) {
@@ -13,10 +15,10 @@ export const useClickOutside = (
       callback();
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    rootDiv?.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      rootDiv?.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [ref, callback]);
+  }, [ref, callback, rootDiv]);
 };

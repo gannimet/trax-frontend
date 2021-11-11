@@ -14,14 +14,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { ValueType } from '../../components/InlineEdit/TextInlineEdit/text-inline-edit.types';
 import TagList from '../../components/TagList/tag-list';
 import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock/ticket-comment-block';
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
 import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
 import { useCurrentUserId } from '../../hooks/use-auth';
-import { TicketEditField } from '../../models/ticket.models';
+import {
+  TicketEditField,
+  TicketStatus,
+  TicketType,
+} from '../../models/ticket.models';
+import { User } from '../../models/user.models';
 import {
   TicketStatusActions,
   TicketStatusReducerAction,
@@ -95,13 +99,31 @@ const TicketPage: React.FC = () => {
     );
   };
 
-  const onFieldEdited = (field: TicketEditField, value: ValueType) => {
+  const onFieldEdited = (
+    field: TicketEditField,
+    value:
+      | number
+      | string
+      | User
+      | TicketStatus
+      | TicketType
+      | null
+      | undefined,
+  ) => {
     if (!ticket) {
       return;
     }
 
+    let atomicValue: string | number | undefined | null;
+
+    if (typeof value === 'number' || typeof value === 'string') {
+      atomicValue = value;
+    } else if (value?.id) {
+      atomicValue = value.id;
+    }
+
     const hide = message.loading('Saving ...');
-    ticketDispatch(editTicket(ticket.id, field, value)).then(() => {
+    ticketDispatch(editTicket(ticket.id, field, atomicValue)).then(() => {
       hide();
 
       if (editTicketError) {

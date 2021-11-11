@@ -13,7 +13,7 @@ import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import UserAvatar from '../../components/UserAvatar/user-avatar';
 import { useAuthState } from '../../hooks/use-auth';
-import { User } from '../../models/user.models';
+import { AuthIdentity } from '../../models/auth.models';
 import AuthService from '../../services/auth.service';
 import {
   AuthActions,
@@ -66,7 +66,9 @@ const FullPageLayout: React.FC = ({ children }) => {
               <Space>
                 <UserAvatar
                   size="small"
-                  user={{ firstName, lastName, avatar, id: userId } as User}
+                  user={
+                    { firstName, lastName, avatar, id: userId } as AuthIdentity
+                  }
                 />
                 <span>
                   {firstName} {lastName}

@@ -1,7 +1,7 @@
 import { AvatarSize } from 'antd/lib/avatar/SizeContext';
-import { User } from '../../models/user.models';
+import { AuthIdentity } from '../../models/auth.models';
 
 export interface UserAvatarProps {
-  user: User;
+  user: AuthIdentity;
   size?: AvatarSize;
 }
