@@ -23,9 +23,14 @@ import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticke
 import { useCurrentUserId } from '../../hooks/use-auth';
 import { TicketEditField } from '../../models/ticket.models';
 import {
+  TicketStatusActions,
+  TicketStatusReducerAction,
+} from '../../state/actions/ticket-status.actions';
+import {
   TicketsActions,
   TicketsReducerAction,
 } from '../../state/actions/tickets.actions';
+import { TicketStatusInfoState } from '../../state/reducers/ticket-status.reducer';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
 import './ticket.page.scss';
@@ -39,20 +44,42 @@ const { TabPane } = Tabs;
 
 const TicketPage: React.FC = () => {
   const { issueNumber } = useParams<TicketPageParams>();
-  const dispatch: ThunkDispatch<StoreStateType, void, TicketsReducerAction> =
-    useDispatch<Dispatch<TicketsReducerAction>>();
+  const ticketDispatch: ThunkDispatch<
+    StoreStateType,
+    void,
+    TicketsReducerAction
+  > = useDispatch<Dispatch<TicketsReducerAction>>();
+  const ticketStatusDispatch: ThunkDispatch<
+    StoreStateType,
+    void,
+    TicketStatusReducerAction
+  > = useDispatch<Dispatch<TicketStatusReducerAction>>();
   const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
     StoreStateType,
     TicketsState
   >((state) => state.tickets);
+  const { ticketStatusInfo, ticketStatusLoading } = useSelector<
+    StoreStateType,
+    TicketStatusInfoState
+  >((state) => state.ticketStatusInfo);
   const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
     new TicketsActions();
+  const { fetchTicketStatusTransitions } = new TicketStatusActions();
   const currentUserId = useCurrentUserId();
 
   useEffect(() => {
-    dispatch(fetchTicketByIssueNumber(issueNumber));
+    ticketDispatch(fetchTicketByIssueNumber(issueNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
+
+  useEffect(() => {
+    const teamId = ticket?.sprint?.team?.id;
+
+    if (teamId) {
+      ticketStatusDispatch(fetchTicketStatusTransitions(teamId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ticket]);
 
   const onCommentSubmit = (values: { commentText: string }) => {
     if (!ticket) {
@@ -60,10 +87,12 @@ const TicketPage: React.FC = () => {
     }
 
     const hide = message.loading('Posting comment …');
-    dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
-      hide();
-      message.success('Comment posted successfully!', 2);
-    });
+    ticketDispatch(postTicketComment(ticket?.id, values.commentText)).then(
+      () => {
+        hide();
+        message.success('Comment posted successfully!', 2);
+      },
+    );
   };
 
   const onFieldEdited = (field: TicketEditField, value: ValueType) => {
@@ -72,7 +101,7 @@ const TicketPage: React.FC = () => {
     }
 
     const hide = message.loading('Saving ...');
-    dispatch(editTicket(ticket.id, field, value)).then(() => {
+    ticketDispatch(editTicket(ticket.id, field, value)).then(() => {
       hide();
 
       if (editTicketError) {
@@ -84,7 +113,7 @@ const TicketPage: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (ticketLoading) {
+    if (ticketLoading || ticketStatusLoading) {
       return <Skeleton />;
     }
 
@@ -101,7 +130,7 @@ const TicketPage: React.FC = () => {
   };
 
   const renderTicketDetails = () => {
-    if (!ticket) {
+    if (!ticket || !ticketStatusInfo) {
       return null;
     }
 
@@ -128,6 +157,7 @@ const TicketPage: React.FC = () => {
 
           <TicketMetaBlock
             ticket={ticket}
+            statusInfo={ticketStatusInfo}
             alloweEdits={canEditTickets}
             onEditSubmit={onFieldEdited}
           />

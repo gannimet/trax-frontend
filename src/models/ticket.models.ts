@@ -25,7 +25,19 @@ export interface Ticket {
 export interface TicketStatus {
   id: string;
   name: string;
-  teamId: null;
+  teamId: null | string;
+  transitionsFrom?: TicketStatusTransitionFrom[];
+  transitionsTo?: TicketStatusTransitionTo[];
+}
+
+export interface TicketStatusTransitionFrom {
+  id: string;
+  nextStatus: TicketStatus;
+}
+
+export interface TicketStatusTransitionTo {
+  id: string;
+  previousStatus: TicketStatus;
 }
 
 export interface TicketTypeObj {

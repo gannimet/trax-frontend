@@ -7,7 +7,11 @@ import UserAvatar from '../../UserAvatar/user-avatar';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
-  ({ ticket, onEditSubmit, alloweEdits }) => {
+  ({ ticket, statusInfo, onEditSubmit, alloweEdits }) => {
+    const onStatusClick = () => {
+      console.log('statusInfo:', statusInfo);
+    };
+
     return (
       <Descriptions
         bordered
@@ -57,7 +61,9 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Status">
-          <Tag color="green">{ticket.status.name}</Tag>
+          <Tag onClick={onStatusClick} color="green">
+            {ticket.status.name}
+          </Tag>
         </Descriptions.Item>
 
         <Descriptions.Item label="Ticket type">
