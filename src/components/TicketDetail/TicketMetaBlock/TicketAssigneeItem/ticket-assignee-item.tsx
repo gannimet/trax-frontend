@@ -1,4 +1,3 @@
-import { Space } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -14,7 +13,7 @@ import {
 } from '../../../../state/actions/user-teams.actions';
 import { StoreStateType } from '../../../../state/root.reducer';
 import AutoCompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
-import UserAvatar from '../../../UserAvatar/user-avatar';
+import UserDisplayLine from '../../../UserDisplayLine/user-display-line';
 import { TicketAssigneeItemProps } from './ticket-assignee-item.types';
 
 const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(({ ticket }) => {
@@ -28,14 +27,7 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(({ ticket }) => {
   const { editTicket } = new TicketsActions();
 
   const renderAssigneOptionView = (user: User) => {
-    return (
-      <Space>
-        <UserAvatar user={user} />
-        <span>
-          {user.firstName} {user.lastName}
-        </span>
-      </Space>
-    );
+    return <UserDisplayLine user={user} />;
   };
 
   const getFilteredAssigneeOptions = (searchValue: string): Promise<User[]> => {
@@ -59,11 +51,14 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(({ ticket }) => {
   };
 
   const onSelectAssignee = (userId: string | null) => {
+    if (ticket.assignee?.id === userId) {
+      return;
+    }
+
     dispatch(editTicket(ticket.id, 'ASSIGNEE', userId));
   };
 
   return (
-    // eslint-disable-next-line react/jsx-no-undef
     <AutoCompleteInlineEdit
       value={ticket.assignee ?? null}
       getOptionView={renderAssigneOptionView}

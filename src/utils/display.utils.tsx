@@ -13,6 +13,10 @@ export const getUserInitials = (user: AuthIdentity): string => {
     .toUpperCase()}`;
 };
 
+export const getUserFullName = (user: AuthIdentity): string => {
+  return `${user.firstName} ${user.lastName}`;
+};
+
 export const formatDate = (
   rawDate: Date | string,
   format = 'YYYY-MM-DD HH:mm:ss',
@@ -49,6 +53,6 @@ export const getTicketEditingDescription = (
     case 'REMOVE_TAG':
       return <>{userLink} removed a tag</>;
     default:
-      return `${editor.firstName} ${editor.lastName}`;
+      return getUserFullName(editor);
   }
 };

@@ -8,6 +8,7 @@ import {
 } from '../../../utils/display.utils';
 import UserAvatar from '../../UserAvatar/user-avatar';
 import UserLink from '../../UserLink/user-link';
+import AssigneeEditContent from './AssigneeEditContent/assignee-edit-content';
 import EstimateEditContent from './EstimateEditContent/estimate-edit-content';
 import TextEditContent from './TextEditContent/text-edit-content';
 import './ticket-edits-block.scss';
@@ -42,6 +43,10 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
 
                         {edit.field === 'ESTIMATE' && (
                           <EstimateEditContent edit={edit} />
+                        )}
+
+                        {edit.field === 'ASSIGNEE' && (
+                          <AssigneeEditContent edit={edit} />
                         )}
                       </div>
                     }

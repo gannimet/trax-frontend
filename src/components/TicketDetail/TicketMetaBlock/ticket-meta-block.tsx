@@ -1,9 +1,9 @@
-import { Descriptions, Space, Tag } from 'antd';
+import { Descriptions, Tag } from 'antd';
 import React from 'react';
 import { formatDate } from '../../../utils/display.utils';
 import EstimateBadge from '../../EstimateBadge/estimate-badge';
 import TextInlineEdit from '../../InlineEdit/TextInlineEdit/text-inline-edit';
-import UserAvatar from '../../UserAvatar/user-avatar';
+import UserDisplayLine from '../../UserDisplayLine/user-display-line';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 import TicketAssigneeItem from './TicketAssigneeItem/ticket-assignee-item';
 
@@ -37,12 +37,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Author">
-          <Space>
-            <UserAvatar user={ticket.author} />
-            <span>
-              {ticket.author.firstName} {ticket.author.lastName}
-            </span>
-          </Space>
+          <UserDisplayLine user={ticket.author} />
         </Descriptions.Item>
 
         <Descriptions.Item label="Assignee">

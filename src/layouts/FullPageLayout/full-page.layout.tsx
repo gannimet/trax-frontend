@@ -5,13 +5,13 @@ import {
   IdcardTwoTone,
   TagTwoTone,
 } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, Space } from 'antd';
+import { Breadcrumb, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import UserAvatar from '../../components/UserAvatar/user-avatar';
+import UserDisplayLine from '../../components/UserDisplayLine/user-display-line';
 import { useAuthState } from '../../hooks/use-auth';
 import { AuthIdentity } from '../../models/auth.models';
 import AuthService from '../../services/auth.service';
@@ -63,17 +63,11 @@ const FullPageLayout: React.FC = ({ children }) => {
           <SubMenu
             key="sub-nav"
             icon={
-              <Space>
-                <UserAvatar
-                  size="small"
-                  user={
-                    { firstName, lastName, avatar, id: userId } as AuthIdentity
-                  }
-                />
-                <span>
-                  {firstName} {lastName}
-                </span>
-              </Space>
+              <UserDisplayLine
+                user={
+                  { firstName, lastName, avatar, id: userId } as AuthIdentity
+                }
+              />
             }
             style={{ marginLeft: 'auto' }}
           >

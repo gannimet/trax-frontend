@@ -80,4 +80,6 @@ export interface TicketEdit {
   newValue?: string;
   previousNumber?: number;
   newNumber?: number;
+  previousAssignee?: User;
+  newAssignee?: User;
 }
