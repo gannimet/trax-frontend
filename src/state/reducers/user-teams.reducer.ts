@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { UserTeamInfo } from '../../models/user.models';
+import { User, UserTeamInfo } from '../../models/user.models';
 import {
   UserTeamsActions,
   UserTeamsReducerAction,
@@ -11,10 +11,14 @@ export interface UserTeamsState {
   currentTeamInfos?: UserTeamInfo;
   currentTeamInfosError?: Error;
   currentTeamInfosLoading: boolean;
+  teamUsers?: User[];
+  teamUsersError?: Error;
+  teamUsersLoading: boolean;
 }
 
 export const userTeamsInitialState: UserTeamsState = {
   currentTeamInfosLoading: false,
+  teamUsersLoading: false,
 };
 
 export const userTeamsReducer: Reducer<UserTeamsState, UserTeamsReducerAction> =
@@ -50,6 +54,27 @@ export const userTeamsReducer: Reducer<UserTeamsState, UserTeamsReducerAction> =
           currentTeamInfos: undefined,
           currentTeamInfosLoading: true,
           currentTeamInfosError: undefined,
+        };
+      case UserTeamsActions.FETCH_USERS_OF_TEAM_SUCCESS:
+        return {
+          ...state,
+          teamUsers: action.users,
+          teamUsersLoading: false,
+          teamUsersError: undefined,
+        };
+      case UserTeamsActions.FETCH_USERS_OF_TEAM_ERROR:
+        return {
+          ...state,
+          teamUsers: undefined,
+          teamUsersLoading: false,
+          teamUsersError: action.error,
+        };
+      case UserTeamsActions.FETCH_USERS_OF_TEAM_LOADING:
+        return {
+          ...state,
+          teamUsers: undefined,
+          teamUsersLoading: true,
+          teamUsersError: undefined,
         };
       default:
         return { ...state };

@@ -1,30 +1,14 @@
 import { Descriptions, Space, Tag } from 'antd';
 import React from 'react';
-import { TicketStatus } from '../../../models/ticket.models';
 import { formatDate } from '../../../utils/display.utils';
 import EstimateBadge from '../../EstimateBadge/estimate-badge';
-import AutoCompleteInlineEdit from '../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
 import TextInlineEdit from '../../InlineEdit/TextInlineEdit/text-inline-edit';
 import UserAvatar from '../../UserAvatar/user-avatar';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
+import TicketAssigneeItem from './TicketAssigneeItem/ticket-assignee-item';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
-  ({ ticket, statusInfo, onEditSubmit, alloweEdits }) => {
-    const renderStatusOptionView = (option: TicketStatus) => {
-      return <Tag color="green">{option.name}</Tag>;
-    };
-
-    const getFilteredStatusOptions = (
-      searchValue: string,
-    ): Promise<TicketStatus[]> => {
-      return new Promise((resolve) => {
-        const options = statusInfo.filter((option) =>
-          option.name.toLowerCase().includes(searchValue.toLowerCase()),
-        );
-        resolve(options);
-      });
-    };
-
+  ({ ticket, statusInfo, onEditSubmit, allowEdits }) => {
     return (
       <Descriptions
         bordered
@@ -40,7 +24,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
           <TextInlineEdit
             value={ticket.estimate}
             isNumeric
-            allowEdits={alloweEdits}
+            allowEdits={allowEdits}
             onSubmit={(value) => {
               onEditSubmit('ESTIMATE', value);
             }}
@@ -62,25 +46,11 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Assignee">
-          {ticket.assignee && (
-            <Space>
-              <UserAvatar user={ticket.assignee} />
-              <span>
-                {ticket.assignee.firstName} {ticket.assignee.lastName}
-              </span>
-            </Space>
-          )}
-          {!ticket.assignee && 'Unassigned'}
+          <TicketAssigneeItem ticket={ticket} />
         </Descriptions.Item>
 
         <Descriptions.Item label="Status">
-          <AutoCompleteInlineEdit
-            value={ticket.status}
-            getOptionView={renderStatusOptionView}
-            getFilteredOptions={getFilteredStatusOptions}
-          >
-            <Tag color="green">{ticket.status.name}</Tag>
-          </AutoCompleteInlineEdit>
+          <Tag color="green">{ticket.status.name}</Tag>
         </Descriptions.Item>
 
         <Descriptions.Item label="Ticket type">

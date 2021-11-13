@@ -13,5 +13,5 @@ export interface TicketMetaBlockProps {
     field: TicketEditField,
     value: number | User | TicketStatus | TicketType | null | undefined,
   ): void;
-  alloweEdits: boolean;
+  allowEdits: boolean;
 }

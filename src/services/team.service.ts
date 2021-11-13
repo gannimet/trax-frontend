@@ -1,5 +1,5 @@
 import { TicketStatus } from '../models/ticket.models';
-import { UserTeamInfo } from '../models/user.models';
+import { User, UserTeamInfo } from '../models/user.models';
 import HttpClientService from './http-client.service';
 
 class TeamService extends HttpClientService {
@@ -18,6 +18,12 @@ class TeamService extends HttpClientService {
   getTicketStatusTransitionInfo(teamId: string): Promise<TicketStatus[]> {
     return TeamService.getClientInstance()
       .get<TicketStatus[]>(`/teams/${teamId}/statusinfo`)
+      .then((response) => response.data);
+  }
+
+  getUsersOfTeam(teamId: string, search: string): Promise<User[]> {
+    return TeamService.getClientInstance()
+      .get<User[]>(`/teams/${teamId}/users?search=${search}`)
       .then((response) => response.data);
   }
 }

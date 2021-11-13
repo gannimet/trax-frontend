@@ -1,24 +1,27 @@
 import { AutoComplete } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { Key, useEffect, useRef, useState } from 'react';
 import BaseInlineEdit from '../base-inline-edit';
 import './autocomplete-inline-edit.scss';
 import { AutoCompleteInlineEditProps } from './autocomplete-inline-edit.types';
-
-const { Option } = AutoComplete;
 
 function AutoCompleteInlineEdit<V extends { id: string } | string>({
   onSubmit,
   getOptionView,
   getFilteredOptions,
+  getDisplayValue,
   value,
   children,
   className,
   allowEdits,
 }: AutoCompleteInlineEditProps<V>) {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<V[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     handleSearch('');
+
+    setSelectedValue(null);
 
     return () => {
       // Used to suppress error message on page load
@@ -28,11 +31,16 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   }, []);
 
   const onStartEditing = () => {
-    console.log('on start editing');
+    console.log('onStartEditing');
+    setSelectedValue(null);
+
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const onCancelEdit = () => {
-    console.log('on cancel');
+    setAutoCompleteOptions([]);
   };
 
   const onSubmitEdit = () => {
@@ -40,11 +48,31 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
       return;
     }
 
-    // TODO implement
+    onSubmit(selectedValue);
   };
 
   const handleSearch = (searchValue: string) => {
     getFilteredOptions(searchValue).then(setAutoCompleteOptions);
+
+    if (searchValue === '') {
+      setSelectedValue(null);
+    }
+  };
+
+  const onSelectOption = (value: string, option: { key?: Key }) => {
+    setSelectedValue(option.key as string);
+  };
+
+  const getDisplayValueFromOption = (item: V) => {
+    if (getDisplayValue) {
+      return getDisplayValue(item);
+    }
+
+    if (typeof item === 'string') {
+      return item;
+    }
+
+    return item.id;
   };
 
   const renderOptionView = (item: V) => {
@@ -60,22 +88,25 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   };
 
   const renderEditingView = () => {
+    const options = autoCompleteOptions.map((option) => {
+      return {
+        key: typeof option === 'string' ? option : option.id,
+        value: getDisplayValueFromOption(option),
+        label: renderOptionView(option),
+      };
+    });
+
     return (
       <AutoComplete
+        ref={inputRef}
         style={{ width: 'calc(100% - 67px)' }}
         onSearch={handleSearch}
-      >
-        {autoCompleteOptions.map((option) => {
-          return (
-            <Option
-              key={typeof option === 'string' ? option : option.id}
-              value={typeof option === 'string' ? option : option.id}
-            >
-              {renderOptionView(option)}
-            </Option>
-          );
-        })}
-      </AutoComplete>
+        options={options}
+        onSelect={onSelectOption}
+        allowClear
+        backfill={true}
+        placeholder="Type to serach …"
+      />
     );
   };
 

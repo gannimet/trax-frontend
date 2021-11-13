@@ -25,7 +25,8 @@ function BaseInlineEdit<V>({
     if (onStartEditing && isEditing) {
       onStartEditing();
     }
-  }, [onStartEditing, isEditing]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
 
   const onCancelEdit = () => {
     setIsEditing(false);

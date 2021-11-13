@@ -48,16 +48,13 @@ const { TabPane } = Tabs;
 
 const TicketPage: React.FC = () => {
   const { issueNumber } = useParams<TicketPageParams>();
-  const ticketDispatch: ThunkDispatch<
+
+  const dispatch: ThunkDispatch<
     StoreStateType,
     void,
-    TicketsReducerAction
-  > = useDispatch<Dispatch<TicketsReducerAction>>();
-  const ticketStatusDispatch: ThunkDispatch<
-    StoreStateType,
-    void,
-    TicketStatusReducerAction
-  > = useDispatch<Dispatch<TicketStatusReducerAction>>();
+    TicketsReducerAction | TicketStatusReducerAction
+  > = useDispatch<Dispatch<TicketsReducerAction | TicketStatusReducerAction>>();
+
   const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
     StoreStateType,
     TicketsState
@@ -66,13 +63,15 @@ const TicketPage: React.FC = () => {
     StoreStateType,
     TicketStatusInfoState
   >((state) => state.ticketStatusInfo);
+
   const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
     new TicketsActions();
   const { fetchTicketStatusTransitions } = new TicketStatusActions();
+
   const currentUserId = useCurrentUserId();
 
   useEffect(() => {
-    ticketDispatch(fetchTicketByIssueNumber(issueNumber));
+    dispatch(fetchTicketByIssueNumber(issueNumber));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [issueNumber]);
 
@@ -80,7 +79,7 @@ const TicketPage: React.FC = () => {
     const teamId = ticket?.sprint?.team?.id;
 
     if (teamId) {
-      ticketStatusDispatch(fetchTicketStatusTransitions(teamId));
+      dispatch(fetchTicketStatusTransitions(teamId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticket]);
@@ -91,12 +90,10 @@ const TicketPage: React.FC = () => {
     }
 
     const hide = message.loading('Posting comment …');
-    ticketDispatch(postTicketComment(ticket?.id, values.commentText)).then(
-      () => {
-        hide();
-        message.success('Comment posted successfully!', 2);
-      },
-    );
+    dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
+      hide();
+      message.success('Comment posted successfully!', 2);
+    });
   };
 
   const onFieldEdited = (
@@ -123,7 +120,7 @@ const TicketPage: React.FC = () => {
     }
 
     const hide = message.loading('Saving ...');
-    ticketDispatch(editTicket(ticket.id, field, atomicValue)).then(() => {
+    dispatch(editTicket(ticket.id, field, atomicValue)).then(() => {
       hide();
 
       if (editTicketError) {
@@ -180,7 +177,7 @@ const TicketPage: React.FC = () => {
           <TicketMetaBlock
             ticket={ticket}
             statusInfo={ticketStatusInfo}
-            alloweEdits={canEditTickets}
+            allowEdits={canEditTickets}
             onEditSubmit={onFieldEdited}
           />
 
