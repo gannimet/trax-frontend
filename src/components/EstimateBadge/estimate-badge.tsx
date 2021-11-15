@@ -16,7 +16,14 @@ const EstimateBadge = React.memo<EstimateBadgeProps>(({ value }) => {
     backgroundColor: `rgb(255, ${mG * value + nG}, 0)`,
   };
 
-  return <Badge count={value} className="estimate-badge" style={badgeStyle} />;
+  return (
+    <Badge
+      showZero
+      count={value}
+      className="estimate-badge"
+      style={badgeStyle}
+    />
+  );
 });
 
 EstimateBadge.displayName = 'EstimateBadge';

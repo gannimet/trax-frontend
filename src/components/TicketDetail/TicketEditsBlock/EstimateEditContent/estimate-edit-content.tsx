@@ -8,14 +8,14 @@ const EstimateEditContent = React.memo<EstimateEditContentProps>(({ edit }) => {
   return (
     <Space>
       Previously:
-      {edit.previousNumber ? (
+      {edit.previousNumber != null ? (
         <EstimateBadge value={edit.previousNumber} />
       ) : (
         'No estimate'
       )}
       <ArrowRightOutlined />
       Now:
-      {edit.newNumber ? (
+      {edit.newNumber != null ? (
         <EstimateBadge value={edit.newNumber} />
       ) : (
         'No estimate'

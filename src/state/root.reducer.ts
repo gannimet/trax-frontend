@@ -15,3 +15,5 @@ export const rootReducer = combineReducers({
 export type StoreStateType = ReturnType<typeof rootReducer>;
 
 export type StoreAction = AuthReducerAction;
+
+export type StateEqualityFn<S> = (prev: S, next: S) => boolean;

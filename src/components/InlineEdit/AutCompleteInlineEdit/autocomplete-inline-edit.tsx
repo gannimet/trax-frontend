@@ -31,7 +31,6 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   }, []);
 
   const onStartEditing = () => {
-    console.log('onStartEditing');
     setSelectedValue(null);
 
     if (inputRef.current) {

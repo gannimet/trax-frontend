@@ -37,6 +37,10 @@ import {
 import { TicketStatusInfoState } from '../../state/reducers/ticket-status.reducer';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
+import {
+  ticketsStateEqualityFn,
+  ticketStatusInfoStateEqualityFn,
+} from '../../utils/state-utils';
 import './ticket.page.scss';
 
 interface TicketPageParams {
@@ -46,171 +50,177 @@ interface TicketPageParams {
 const { Paragraph, Title } = Typography;
 const { TabPane } = Tabs;
 
-const TicketPage: React.FC = () => {
-  const { issueNumber } = useParams<TicketPageParams>();
+const TicketPage = React.memo(
+  () => {
+    const { issueNumber } = useParams<TicketPageParams>();
 
-  const dispatch: ThunkDispatch<
-    StoreStateType,
-    void,
-    TicketsReducerAction | TicketStatusReducerAction
-  > = useDispatch<Dispatch<TicketsReducerAction | TicketStatusReducerAction>>();
+    const dispatch: ThunkDispatch<
+      StoreStateType,
+      void,
+      TicketsReducerAction | TicketStatusReducerAction
+    > =
+      useDispatch<Dispatch<TicketsReducerAction | TicketStatusReducerAction>>();
 
-  const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
-    StoreStateType,
-    TicketsState
-  >((state) => state.tickets);
-  const { ticketStatusInfo, ticketStatusLoading } = useSelector<
-    StoreStateType,
-    TicketStatusInfoState
-  >((state) => state.ticketStatusInfo);
+    const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
+      StoreStateType,
+      TicketsState
+    >((state) => state.tickets, ticketsStateEqualityFn);
+    const { ticketStatusInfo, ticketStatusLoading } = useSelector<
+      StoreStateType,
+      TicketStatusInfoState
+    >((state) => state.ticketStatusInfo, ticketStatusInfoStateEqualityFn);
 
-  const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
-    new TicketsActions();
-  const { fetchTicketStatusTransitions } = new TicketStatusActions();
+    const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
+      new TicketsActions();
+    const { fetchTicketStatusTransitions } = new TicketStatusActions();
 
-  const currentUserId = useCurrentUserId();
+    const currentUserId = useCurrentUserId();
 
-  useEffect(() => {
-    dispatch(fetchTicketByIssueNumber(issueNumber));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [issueNumber]);
+    useEffect(() => {
+      dispatch(fetchTicketByIssueNumber(issueNumber));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [issueNumber]);
 
-  useEffect(() => {
-    const teamId = ticket?.sprint?.team?.id;
+    useEffect(() => {
+      const teamId = ticket?.sprint?.team?.id;
 
-    if (teamId) {
-      dispatch(fetchTicketStatusTransitions(teamId));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticket]);
-
-  const onCommentSubmit = (values: { commentText: string }) => {
-    if (!ticket) {
-      return;
-    }
-
-    const hide = message.loading('Posting comment …');
-    dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
-      hide();
-      message.success('Comment posted successfully!', 2);
-    });
-  };
-
-  const onFieldEdited = (
-    field: TicketEditField,
-    value:
-      | number
-      | string
-      | User
-      | TicketStatus
-      | TicketType
-      | null
-      | undefined,
-  ) => {
-    if (!ticket) {
-      return;
-    }
-
-    let atomicValue: string | number | undefined | null;
-
-    if (typeof value === 'number' || typeof value === 'string') {
-      atomicValue = value;
-    } else if (value?.id) {
-      atomicValue = value.id;
-    }
-
-    const hide = message.loading('Saving ...');
-    dispatch(editTicket(ticket.id, field, atomicValue)).then(() => {
-      hide();
-
-      if (editTicketError) {
-        message.error('An error occured.');
-      } else {
-        message.success('Saved.');
+      if (teamId) {
+        dispatch(fetchTicketStatusTransitions(teamId));
       }
-    });
-  };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ticket?.id]);
 
-  const renderContent = () => {
-    if (ticketLoading || ticketStatusLoading) {
-      return <Skeleton />;
-    }
+    const onCommentSubmit = (values: { commentText: string }) => {
+      if (!ticket) {
+        return;
+      }
 
-    if (ticketError) {
+      const hide = message.loading('Posting comment …');
+      dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
+        hide();
+        message.success('Comment posted successfully!', 2);
+      });
+    };
+
+    const onFieldEdited = (
+      field: TicketEditField,
+      value:
+        | number
+        | string
+        | User
+        | TicketStatus
+        | TicketType
+        | null
+        | undefined,
+    ) => {
+      if (!ticket) {
+        return;
+      }
+
+      let atomicValue: string | number | undefined | null;
+
+      if (typeof value === 'number' || typeof value === 'string') {
+        atomicValue = value;
+      } else if (value?.id) {
+        atomicValue = value.id;
+      }
+
+      const hide = message.loading('Saving ...');
+      dispatch(editTicket(ticket.id, field, atomicValue)).then(() => {
+        hide();
+
+        if (editTicketError) {
+          message.error('An error occured.');
+        } else {
+          message.success('Saved.');
+        }
+      });
+    };
+
+    const renderContent = () => {
+      if (ticketLoading || ticketStatusLoading) {
+        return <Skeleton />;
+      }
+
+      if (ticketError) {
+        return (
+          <Alert
+            type="error"
+            message="Ticket details could not be loaded at this time."
+          />
+        );
+      }
+
+      return renderTicketDetails();
+    };
+
+    const renderTicketDetails = () => {
+      if (!ticket || !ticketStatusInfo) {
+        return null;
+      }
+
+      const canEditTickets =
+        ticket.sprint?.team?.users?.find((user) => user.id === currentUserId)
+          ?.TeamUser?.canEditTickets ?? false;
+
       return (
-        <Alert
-          type="error"
-          message="Ticket details could not be loaded at this time."
-        />
-      );
-    }
-
-    return renderTicketDetails();
-  };
-
-  const renderTicketDetails = () => {
-    if (!ticket || !ticketStatusInfo) {
-      return null;
-    }
-
-    const canEditTickets =
-      ticket.sprint?.team?.users?.find((user) => user.id === currentUserId)
-        ?.TeamUser?.canEditTickets ?? false;
-
-    return (
-      <>
-        <TicketDetailTitle
-          ticket={ticket}
-          allowEdits={canEditTickets}
-          onTitleEdit={(newTitle) => onFieldEdited('TITLE', newTitle)}
-        />
-
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          {ticket.tags && ticket.tags.length > 0 && (
-            <Row>
-              <Col span={24}>
-                <TagList tags={ticket.tags} />
-              </Col>
-            </Row>
-          )}
-
-          <TicketMetaBlock
+        <>
+          <TicketDetailTitle
             ticket={ticket}
-            statusInfo={ticketStatusInfo}
             allowEdits={canEditTickets}
-            onEditSubmit={onFieldEdited}
+            onTitleEdit={(newTitle) => onFieldEdited('TITLE', newTitle)}
           />
 
-          <div className="description-block">
-            <Title level={5}>Description</Title>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            {ticket.tags && ticket.tags.length > 0 && (
+              <Row>
+                <Col span={24}>
+                  <TagList tags={ticket.tags} />
+                </Col>
+              </Row>
+            )}
 
-            <Paragraph>
-              {ticket.description ?? (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="No description"
+            <TicketMetaBlock
+              ticket={ticket}
+              statusInfo={ticketStatusInfo}
+              allowEdits={canEditTickets}
+              onEditSubmit={onFieldEdited}
+            />
+
+            <div className="description-block">
+              <Title level={5}>Description</Title>
+
+              <Paragraph>
+                {ticket.description ?? (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description="No description"
+                  />
+                )}
+              </Paragraph>
+            </div>
+
+            <Tabs>
+              <TabPane tab="Comments" key="comments">
+                <TicketCommentBlock
+                  comments={ticket.comments}
+                  onCommentSubmit={onCommentSubmit}
                 />
-              )}
-            </Paragraph>
-          </div>
+              </TabPane>
+              <TabPane tab="History" key="edits">
+                <TicketEditsBlock ticket={ticket} />
+              </TabPane>
+            </Tabs>
+          </Space>
+        </>
+      );
+    };
 
-          <Tabs defaultActiveKey="comments">
-            <TabPane tab="Comments" key="comments">
-              <TicketCommentBlock
-                comments={ticket.comments}
-                onCommentSubmit={onCommentSubmit}
-              />
-            </TabPane>
-            <TabPane tab="History" key="edits">
-              <TicketEditsBlock ticket={ticket} />
-            </TabPane>
-          </Tabs>
-        </Space>
-      </>
-    );
-  };
+    return <div className="ticket-container">{renderContent()}</div>;
+  },
+  () => true,
+);
 
-  return <div className="ticket-container">{renderContent()}</div>;
-};
+TicketPage.displayName = 'TicketPage';
 
 export default TicketPage;
