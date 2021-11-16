@@ -15,15 +15,18 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   children,
   className,
   allowEdits,
+  placeholder = 'Type to search …',
 }: AutoCompleteInlineEditProps<V>) {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<V[]>([]);
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    undefined,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     handleSearch('');
 
-    setSelectedValue(null);
+    setSelectedValue(undefined);
 
     return () => {
       // Used to suppress error message on page load
@@ -33,7 +36,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   }, []);
 
   const handleStartEditing = () => {
-    setSelectedValue(null);
+    setSelectedValue(undefined);
 
     if (inputRef.current) {
       inputRef.current.focus();
@@ -49,7 +52,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   };
 
   const onSubmitEdit = () => {
-    if (!onSubmit) {
+    if (!onSubmit || !selectedValue) {
       return;
     }
 
@@ -58,10 +61,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
 
   const handleSearch = (searchValue: string) => {
     getFilteredOptions(searchValue).then(setAutoCompleteOptions);
-
-    if (searchValue === '') {
-      setSelectedValue(null);
-    }
+    setSelectedValue(undefined);
   };
 
   const onSelectOption = (value: string, option: { key?: Key }) => {
@@ -108,9 +108,8 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
         onSearch={handleSearch}
         options={options}
         onSelect={onSelectOption}
-        allowClear
         backfill={true}
-        placeholder="Type to serach …"
+        placeholder={placeholder}
       />
     );
   };
@@ -124,6 +123,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
       onSubmit={onSubmitEdit}
       onStartEditing={handleStartEditing}
       editingView={renderEditingView()}
+      submittable={!!selectedValue}
     >
       {children}
     </BaseInlineEdit>

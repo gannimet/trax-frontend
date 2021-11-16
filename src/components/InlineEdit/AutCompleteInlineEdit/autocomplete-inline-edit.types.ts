@@ -13,4 +13,5 @@ export interface AutoCompleteInlineEditProps<
   children?: React.ReactNode;
   className?: string;
   allowEdits?: boolean;
+  placeholder?: string;
 }

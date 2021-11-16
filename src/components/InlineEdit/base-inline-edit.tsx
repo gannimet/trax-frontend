@@ -10,6 +10,7 @@ function BaseInlineEdit<V>({
   allowEdits = true,
   editingView,
   className,
+  submittable = true,
   onCancel,
   onSubmit,
   onStartEditing,
@@ -18,7 +19,7 @@ function BaseInlineEdit<V>({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(containerRef, () => {
-    setIsEditing(false);
+    onCancelEdit();
   });
 
   useEffect(() => {
@@ -34,8 +35,10 @@ function BaseInlineEdit<V>({
   };
 
   const onSubmitEdit = () => {
-    setIsEditing(false);
-    onSubmit && onSubmit();
+    if (submittable) {
+      setIsEditing(false);
+      onSubmit && onSubmit();
+    }
   };
 
   const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -79,6 +82,7 @@ function BaseInlineEdit<V>({
         <Button
           icon={<CheckOutlined />}
           type="primary"
+          disabled={!submittable}
           onClick={onSubmitEdit}
         />
       </div>

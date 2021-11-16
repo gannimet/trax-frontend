@@ -6,6 +6,7 @@ export interface BaseInlineEditProps<V> {
   children: React.ReactNode;
   value: V | null | undefined;
   className?: string;
+  submittable?: boolean;
   onCancel?(): void;
   onSubmit?(): void;
   onStartEditing?(): void;
