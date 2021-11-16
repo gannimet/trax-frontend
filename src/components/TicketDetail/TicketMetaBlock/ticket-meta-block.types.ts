@@ -11,7 +11,14 @@ export interface TicketMetaBlockProps {
   statusInfo: TicketStatus[];
   onEditSubmit(
     field: TicketEditField,
-    value: number | User | TicketStatus | TicketType | null | undefined,
+    value:
+      | number
+      | string
+      | User
+      | TicketStatus
+      | TicketType
+      | null
+      | undefined,
   ): void;
   allowEdits: boolean;
 }

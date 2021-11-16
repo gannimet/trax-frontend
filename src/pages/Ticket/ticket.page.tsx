@@ -90,15 +90,23 @@ const TicketPage = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket?.id]);
 
-    const onCommentSubmit = (values: { commentText: string }) => {
-      if (!ticket) {
-        return;
-      }
+    const onCommentSubmit = (values: {
+      commentText: string;
+    }): Promise<void> => {
+      return new Promise<void>((resolve, reject) => {
+        if (!ticket) {
+          reject();
 
-      const hide = message.loading('Posting comment …');
-      dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
-        hide();
-        message.success('Comment posted successfully!', 2);
+          return;
+        }
+
+        const hide = message.loading('Posting comment …');
+
+        dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
+          hide();
+          message.success('Comment posted successfully!', 2);
+          resolve();
+        }, reject);
       });
     };
 

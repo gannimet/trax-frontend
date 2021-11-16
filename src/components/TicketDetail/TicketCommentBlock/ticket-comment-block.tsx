@@ -10,7 +10,8 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import React from 'react';
+import { useForm } from 'antd/lib/form/Form';
+import React, { useState } from 'react';
 import { formatDate, formatRelativeDate } from '../../../utils/display.utils';
 import UserAvatar from '../../UserAvatar/user-avatar';
 import UserLink from '../../UserLink/user-link';
@@ -19,8 +20,27 @@ import { TicketCommentBlockProps } from './ticket-comment-block.types';
 const { Title } = Typography;
 const { TextArea } = Input;
 
+type CommentFormValue = { commentText: string };
+
 const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
   ({ comments, onCommentSubmit }) => {
+    const [form] = useForm<CommentFormValue>();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleFormSubmit = (value: CommentFormValue) => {
+      setIsSubmitting(true);
+
+      onCommentSubmit(value).then(
+        () => {
+          setIsSubmitting(false);
+          form.resetFields();
+        },
+        () => {
+          setIsSubmitting(false);
+        },
+      );
+    };
+
     return (
       <div className="comment-block-container">
         <Title level={5}>{comments.length} Comments</Title>
@@ -28,7 +48,7 @@ const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
         <Space direction="vertical" style={{ width: '100%' }}>
           <Row>
             <Col xs={24} sm={24} md={24} lg={16} xl={12}>
-              <Form onFinish={onCommentSubmit}>
+              <Form form={form} onFinish={handleFormSubmit}>
                 <Form.Item
                   name="commentText"
                   rules={[
@@ -44,7 +64,11 @@ const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
                   />
                 </Form.Item>
                 <Form.Item style={{ textAlign: 'right' }}>
-                  <Button type="primary" htmlType="submit">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isSubmitting}
+                  >
                     Save comment
                   </Button>
                 </Form.Item>

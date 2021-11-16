@@ -41,7 +41,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Assignee">
-          <TicketAssigneeItem ticket={ticket} />
+          <TicketAssigneeItem ticket={ticket} onEditSubmit={onEditSubmit} />
         </Descriptions.Item>
 
         <Descriptions.Item label="Status">

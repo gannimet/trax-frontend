@@ -24,7 +24,7 @@ class TicketService extends HttpClientService {
     return TicketService.getClientInstance()
       .put<Ticket>(`/tickets/${ticketId}`, {
         field,
-        newValue,
+        newValue: newValue != null ? newValue : null,
       })
       .then((response) => response.data);
   }

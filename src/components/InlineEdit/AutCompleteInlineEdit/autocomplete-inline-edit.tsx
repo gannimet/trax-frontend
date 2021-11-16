@@ -6,6 +6,8 @@ import { AutoCompleteInlineEditProps } from './autocomplete-inline-edit.types';
 
 function AutoCompleteInlineEdit<V extends { id: string } | string>({
   onSubmit,
+  onStartEditing,
+  onCancel,
   getOptionView,
   getFilteredOptions,
   getDisplayValue,
@@ -30,16 +32,20 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onStartEditing = () => {
+  const handleStartEditing = () => {
     setSelectedValue(null);
 
     if (inputRef.current) {
       inputRef.current.focus();
     }
+
+    onStartEditing && onStartEditing();
   };
 
   const onCancelEdit = () => {
     setAutoCompleteOptions([]);
+
+    onCancel && onCancel();
   };
 
   const onSubmitEdit = () => {
@@ -116,7 +122,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
       className={className}
       onCancel={onCancelEdit}
       onSubmit={onSubmitEdit}
-      onStartEditing={onStartEditing}
+      onStartEditing={handleStartEditing}
       editingView={renderEditingView()}
     >
       {children}

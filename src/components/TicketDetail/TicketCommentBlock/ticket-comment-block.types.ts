@@ -2,5 +2,6 @@ import { TicketComment } from '../../../models/ticket.models';
 
 export interface TicketCommentBlockProps {
   comments: TicketComment[];
-  onCommentSubmit: (formValue: { commentText: string }) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCommentSubmit: (formValue: { commentText: string }) => Promise<any>;
 }
