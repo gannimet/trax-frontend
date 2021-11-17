@@ -1,6 +1,6 @@
 import { AutoComplete } from 'antd';
 import React, { Key, useEffect, useRef, useState } from 'react';
-import { useAutoCompleteCache } from '../../../hooks/use-autocomplete-cache';
+import { useCache } from '../../../hooks/use-cache';
 import BaseInlineEdit from '../base-inline-edit';
 import './autocomplete-inline-edit.scss';
 import { AutoCompleteInlineEditProps } from './autocomplete-inline-edit.types';
@@ -19,7 +19,10 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   placeholder = 'Type to search …',
 }: AutoCompleteInlineEditProps<V>) {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<V[]>([]);
-  const [getCacheItem, setCacheItem, clearCache] = useAutoCompleteCache<V[]>();
+  const [getOptionsCacheItem, setOptionsCacheItem, clearOptionsCache] =
+    useCache<V[]>();
+  const [getViewCacheItem, setViewCacheItem, clearViewCache] =
+    useCache<React.ReactNode>();
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     undefined,
   );
@@ -32,13 +35,16 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
     return () => {
       // Used to suppress error message on page load
       setAutoCompleteOptions([]);
+      clearOptionsCache();
+      clearViewCache();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStartEditing = () => {
+    clearOptionsCache();
+    clearViewCache();
     setSelectedValue(undefined);
-    clearCache();
 
     if (inputRef.current) {
       inputRef.current.focus();
@@ -62,14 +68,14 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   };
 
   const handleSearch = (searchValue: string) => {
-    const cacheItem = getCacheItem(searchValue);
+    const cacheItem = getOptionsCacheItem(searchValue);
 
     if (cacheItem) {
       setAutoCompleteOptions(cacheItem);
     } else {
       getFilteredOptions(searchValue).then((options) => {
         setAutoCompleteOptions(options);
-        setCacheItem(searchValue, options);
+        setOptionsCacheItem(searchValue, options);
       });
     }
 
@@ -94,7 +100,17 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
 
   const renderOptionView = (item: V) => {
     if (getOptionView) {
-      return getOptionView(item);
+      const cacheKey = typeof item === 'string' ? item : item.id;
+      const cacheValue = getViewCacheItem(cacheKey);
+
+      if (cacheValue) {
+        return cacheValue;
+      } else {
+        const optionView = getOptionView(item);
+        setViewCacheItem(cacheKey, optionView);
+
+        return optionView;
+      }
     }
 
     if (typeof item === 'string') {
