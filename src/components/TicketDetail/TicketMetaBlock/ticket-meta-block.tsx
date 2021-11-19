@@ -1,4 +1,4 @@
-import { Descriptions, Tag } from 'antd';
+import { Descriptions } from 'antd';
 import React from 'react';
 import { formatDate } from '../../../utils/display.utils';
 import EstimateBadge from '../../EstimateBadge/estimate-badge';
@@ -6,6 +6,7 @@ import TextInlineEdit from '../../InlineEdit/TextInlineEdit/text-inline-edit';
 import UserDisplayLine from '../../UserDisplayLine/user-display-line';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 import TicketAssigneeItem from './TicketAssigneeItem/ticket-assignee-item';
+import TicketStatusItem from './TicketStatusItem/ticket-status-item';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
   ({ ticket, statusInfo, onEditSubmit, allowEdits }) => {
@@ -41,11 +42,18 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Assignee">
-          <TicketAssigneeItem ticket={ticket} onEditSubmit={onEditSubmit} />
+          <TicketAssigneeItem
+            ticket={ticket}
+            onEditSubmit={(value) => onEditSubmit('ASSIGNEE', value)}
+          />
         </Descriptions.Item>
 
         <Descriptions.Item label="Status">
-          <Tag color="green">{ticket.status.name}</Tag>
+          <TicketStatusItem
+            ticket={ticket}
+            onEditSubmit={(value) => onEditSubmit('STATUS', value)}
+            statusOptions={statusInfo}
+          />
         </Descriptions.Item>
 
         <Descriptions.Item label="Ticket type">

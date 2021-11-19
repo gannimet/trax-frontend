@@ -57,7 +57,7 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(
       setIsEditing(false);
 
       if (ticket.assignee?.id !== userId) {
-        onEditSubmit('ASSIGNEE', userId);
+        onEditSubmit(userId);
       }
     };
 
@@ -66,12 +66,12 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(
     };
 
     const handleRemoveAssigneeClick = () => {
-      onEditSubmit('ASSIGNEE', null);
+      onEditSubmit(null);
     };
 
     const handleAssignToMeClick = () => {
       if (currentUserId) {
-        onEditSubmit('ASSIGNEE', currentUserId);
+        onEditSubmit(currentUserId);
       }
     };
 

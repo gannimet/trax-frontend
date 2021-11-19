@@ -102,11 +102,18 @@ const TicketPage = React.memo(
 
         const hide = message.loading('Posting comment …');
 
-        dispatch(postTicketComment(ticket?.id, values.commentText)).then(() => {
-          hide();
-          message.success('Comment posted successfully!', 2);
-          resolve();
-        }, reject);
+        dispatch(postTicketComment(ticket?.id, values.commentText)).then(
+          (action) => {
+            hide();
+
+            if (action.type === TicketsActions.POST_TICKET_COMMENT_SUCCESS) {
+              message.success('Comment posted successfully!', 2);
+            }
+
+            resolve();
+          },
+          reject,
+        );
       });
     };
 
