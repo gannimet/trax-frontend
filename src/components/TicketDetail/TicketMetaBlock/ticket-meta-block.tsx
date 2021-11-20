@@ -1,4 +1,5 @@
 import { Descriptions } from 'antd';
+import useBreakpoint from 'antd/lib/grid/hooks/useBreakpoint';
 import React from 'react';
 import { formatDate } from '../../../utils/display.utils';
 import EstimateBadge from '../../EstimateBadge/estimate-badge';
@@ -10,12 +11,14 @@ import TicketStatusItem from './TicketStatusItem/ticket-status-item';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
   ({ ticket, statusInfo, onEditSubmit, allowEdits }) => {
+    const screens = useBreakpoint();
+
     return (
       <Descriptions
         bordered
         column={{ xl: 2, md: 1, sm: 1, xs: 1 }}
         labelStyle={{ width: '200px' }}
-        contentStyle={{ width: '35%' }}
+        contentStyle={screens.sm ? {} : { width: '35%' }}
       >
         <Descriptions.Item label="Created At">
           {formatDate(ticket.createdAt)}
