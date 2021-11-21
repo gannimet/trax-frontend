@@ -82,4 +82,6 @@ export interface TicketEdit {
   newNumber?: number;
   previousAssignee?: User;
   newAssignee?: User;
+  previousStatus?: TicketStatus;
+  newStatus?: TicketStatus;
 }

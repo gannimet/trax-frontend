@@ -10,6 +10,7 @@ import UserAvatar from '../../UserAvatar/user-avatar';
 import UserLink from '../../UserLink/user-link';
 import AssigneeEditContent from './AssigneeEditContent/assignee-edit-content';
 import EstimateEditContent from './EstimateEditContent/estimate-edit-content';
+import StatusEditContent from './StatusEditContent/status-edit-content';
 import TextEditContent from './TextEditContent/text-edit-content';
 import './ticket-edits-block.scss';
 import { TicketEditsBlockProps } from './ticket-edits-block.types';
@@ -47,6 +48,10 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
 
                         {edit.field === 'ASSIGNEE' && (
                           <AssigneeEditContent edit={edit} />
+                        )}
+
+                        {edit.field === 'STATUS' && (
+                          <StatusEditContent edit={edit} />
                         )}
                       </div>
                     }
