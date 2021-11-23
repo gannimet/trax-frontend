@@ -1,4 +1,8 @@
-import { Ticket, TicketEditField } from '../models/ticket.models';
+import {
+  Ticket,
+  TicketEditField,
+  TicketTypeObj,
+} from '../models/ticket.models';
 import HttpClientService from './http-client.service';
 
 class TicketService extends HttpClientService {
@@ -13,6 +17,12 @@ class TicketService extends HttpClientService {
       .post<Ticket>(`/tickets/${ticketId}/comments`, {
         text,
       })
+      .then((response) => response.data);
+  }
+
+  getAllTicketTypes(): Promise<TicketTypeObj[]> {
+    return TicketService.getClientInstance()
+      .get<TicketTypeObj[]>('/tickets/types')
       .then((response) => response.data);
   }
 

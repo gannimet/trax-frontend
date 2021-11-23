@@ -43,6 +43,7 @@ export interface TicketStatusTransitionTo {
 export interface TicketTypeObj {
   id: string;
   name: TicketType;
+  convertible: boolean;
 }
 
 export type TicketType = 'Task' | 'Subtask' | 'Story' | 'Bug';

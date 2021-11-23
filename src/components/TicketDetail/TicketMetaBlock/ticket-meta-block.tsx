@@ -8,9 +8,10 @@ import UserDisplayLine from '../../UserDisplayLine/user-display-line';
 import { TicketMetaBlockProps } from './ticket-meta-block.types';
 import TicketAssigneeItem from './TicketAssigneeItem/ticket-assignee-item';
 import TicketStatusItem from './TicketStatusItem/ticket-status-item';
+import TicketTypeItem from './TicketTypeItem/ticket-type-item';
 
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
-  ({ ticket, statusInfo, onEditSubmit, allowEdits }) => {
+  ({ ticket, statusInfo, convertibleTypes, onEditSubmit, allowEdits }) => {
     const screens = useBreakpoint();
 
     return (
@@ -60,7 +61,11 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
         </Descriptions.Item>
 
         <Descriptions.Item label="Ticket type">
-          {ticket.type.name}
+          <TicketTypeItem
+            ticket={ticket}
+            onEditSubmit={(value) => onEditSubmit('TYPE', value)}
+            convertibleTypes={convertibleTypes}
+          />
         </Descriptions.Item>
       </Descriptions>
     );

@@ -30,11 +30,13 @@ import {
   TicketStatusActions,
   TicketStatusReducerAction,
 } from '../../state/actions/ticket-status.actions';
+import { TicketTypeActions } from '../../state/actions/ticket-type.actions';
 import {
   TicketsActions,
   TicketsReducerAction,
 } from '../../state/actions/tickets.actions';
 import { TicketStatusInfoState } from '../../state/reducers/ticket-status.reducer';
+import { TicketTypesState } from '../../state/reducers/ticket-type.reducer';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
 import {
@@ -69,10 +71,15 @@ const TicketPage = React.memo(
       StoreStateType,
       TicketStatusInfoState
     >((state) => state.ticketStatusInfo, ticketStatusInfoStateEqualityFn);
+    const { ticketTypes, ticketTypesLoading } = useSelector<
+      StoreStateType,
+      TicketTypesState
+    >((state) => state.ticketTypes);
 
     const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
       new TicketsActions();
     const { fetchTicketStatusTransitions } = new TicketStatusActions();
+    const { fetchTicketTypes } = new TicketTypeActions();
 
     const currentUserId = useCurrentUserId();
 
@@ -87,6 +94,8 @@ const TicketPage = React.memo(
       if (teamId) {
         dispatch(fetchTicketStatusTransitions(teamId));
       }
+
+      dispatch(fetchTicketTypes());
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket?.id]);
 
@@ -153,7 +162,7 @@ const TicketPage = React.memo(
     };
 
     const renderContent = () => {
-      if (ticketLoading || ticketStatusLoading) {
+      if (ticketLoading || ticketStatusLoading || ticketTypesLoading) {
         return <Skeleton />;
       }
 
@@ -170,13 +179,17 @@ const TicketPage = React.memo(
     };
 
     const renderTicketDetails = () => {
-      if (!ticket || !ticketStatusInfo) {
+      if (!ticket || !ticketStatusInfo || !ticketTypes) {
         return null;
       }
 
       const canEditTickets =
         ticket.sprint?.team?.users?.find((user) => user.id === currentUserId)
           ?.TeamUser?.canEditTickets ?? false;
+
+      const convertibleTicketTypes = ticketTypes.filter(
+        (type) => type.convertible,
+      );
 
       return (
         <>
@@ -198,6 +211,7 @@ const TicketPage = React.memo(
             <TicketMetaBlock
               ticket={ticket}
               statusInfo={ticketStatusInfo}
+              convertibleTypes={convertibleTicketTypes}
               allowEdits={canEditTickets}
               onEditSubmit={onFieldEdited}
             />
