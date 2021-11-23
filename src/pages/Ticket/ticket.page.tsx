@@ -42,6 +42,7 @@ import { StoreStateType } from '../../state/root.reducer';
 import {
   ticketsStateEqualityFn,
   ticketStatusInfoStateEqualityFn,
+  ticketTypesStateEqualityFn,
 } from '../../utils/state-utils';
 import './ticket.page.scss';
 
@@ -74,7 +75,7 @@ const TicketPage = React.memo(
     const { ticketTypes, ticketTypesLoading } = useSelector<
       StoreStateType,
       TicketTypesState
-    >((state) => state.ticketTypes);
+    >((state) => state.ticketTypes, ticketTypesStateEqualityFn);
 
     const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
       new TicketsActions();
@@ -95,7 +96,9 @@ const TicketPage = React.memo(
         dispatch(fetchTicketStatusTransitions(teamId));
       }
 
-      dispatch(fetchTicketTypes());
+      if (ticket?.id) {
+        dispatch(fetchTicketTypes());
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket?.id]);
 

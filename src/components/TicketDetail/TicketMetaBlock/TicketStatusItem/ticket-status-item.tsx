@@ -1,7 +1,7 @@
 import { Tag } from 'antd';
 import React from 'react';
 import { TicketStatus } from '../../../../models/ticket.models';
-import AutocompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
+import AutoCompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
 import { TicketStatusItemProps } from './ticket-status-item.types';
 
 const TicketStatusItem = React.memo<TicketStatusItemProps>(
@@ -42,7 +42,7 @@ const TicketStatusItem = React.memo<TicketStatusItemProps>(
     };
 
     return (
-      <AutocompleteInlineEdit
+      <AutoCompleteInlineEdit
         value={ticket.status}
         getOptionView={renderStatusOptionView}
         getFilteredOptions={getFilteredStatusOptions}
@@ -50,7 +50,7 @@ const TicketStatusItem = React.memo<TicketStatusItemProps>(
         onSubmit={onSelectStatus}
       >
         {renderStatusOptionView(ticket.status)}
-      </AutocompleteInlineEdit>
+      </AutoCompleteInlineEdit>
     );
   },
 );

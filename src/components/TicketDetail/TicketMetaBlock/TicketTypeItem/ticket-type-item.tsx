@@ -7,7 +7,7 @@ import { TicketTypeItemProps } from './ticket-type-item.types';
 const TicketTypeItem = React.memo<TicketTypeItemProps>(
   ({ ticket, onEditSubmit, convertibleTypes }) => {
     const renderTypeOptionView = (type: TicketTypeObj) => {
-      return <Tag color="orange">{type.name}</Tag>;
+      return <Tag color="purple">{type.name}</Tag>;
     };
 
     const getFilteredTypeOptions = (

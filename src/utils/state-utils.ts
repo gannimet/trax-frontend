@@ -1,12 +1,13 @@
 import { Ticket } from '../models/ticket.models';
 import { TicketStatusInfoState } from '../state/reducers/ticket-status.reducer';
+import { TicketTypesState } from '../state/reducers/ticket-type.reducer';
 import { TicketsState } from '../state/reducers/tickets.reducer';
 import { StateEqualityFn } from '../state/root.reducer';
 
 export type IdentifiableObjectArray = { id: string }[];
 
 export const ticketStatusInfoStateEqualityFn: StateEqualityFn<TicketStatusInfoState> =
-  (prev, next): boolean => {
+  (prev, next) => {
     if (prev.ticketStatusLoading !== next.ticketStatusLoading) {
       return false;
     }
@@ -26,6 +27,27 @@ export const ticketStatusInfoStateEqualityFn: StateEqualityFn<TicketStatusInfoSt
       next.ticketStatusInfo,
     );
   };
+
+export const ticketTypesStateEqualityFn: StateEqualityFn<TicketTypesState> = (
+  prev,
+  next,
+) => {
+  if (prev.ticketTypesLoading !== next.ticketTypesLoading) {
+    return false;
+  }
+
+  if (prev.ticketTypesError !== next.ticketTypesError) {
+    return false;
+  }
+
+  if (!prev.ticketTypes) {
+    return !next.ticketTypes;
+  } else if (!next.ticketTypes) {
+    return false;
+  }
+
+  return checkIdObjectArrayEquality(prev.ticketTypes, next.ticketTypes);
+};
 
 export const ticketsStateEqualityFn: StateEqualityFn<TicketsState> = (
   prev,

@@ -29,8 +29,8 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    handleSearch('');
     setSelectedValue(undefined);
+    handleSearch('');
 
     return () => {
       // Used to suppress error message on page load
@@ -45,10 +45,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
     clearOptionsCache();
     clearViewCache();
     setSelectedValue(undefined);
-
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    handleSearch('');
 
     onStartEditing && onStartEditing();
   };
@@ -138,6 +135,8 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
         onSelect={onSelectOption}
         backfill={true}
         placeholder={placeholder}
+        defaultOpen={true}
+        autoFocus={true}
       />
     );
   };
