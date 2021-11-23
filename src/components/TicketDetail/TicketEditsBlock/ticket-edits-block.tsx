@@ -1,6 +1,7 @@
 import { Col, Comment, Row, Timeline, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { TicketEdit } from '../../../models/ticket.models';
 import {
   formatDate,
   formatRelativeDate,
@@ -21,6 +22,24 @@ const { Title } = Typography;
 const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
   const { edits, author, createdAt } = ticket;
 
+  const getContentView = (edit: TicketEdit) => {
+    const isTextEdit = edit.field === 'TITLE' || edit.field === 'DESCRIPTION';
+
+    return (
+      <div className="edit-content">
+        {isTextEdit && <TextEditContent edit={edit} />}
+
+        {edit.field === 'ESTIMATE' && <EstimateEditContent edit={edit} />}
+
+        {edit.field === 'ASSIGNEE' && <AssigneeEditContent edit={edit} />}
+
+        {edit.field === 'STATUS' && <StatusEditContent edit={edit} />}
+
+        {edit.field === 'TYPE' && <TypeEditContent edit={edit} />}
+      </div>
+    );
+  };
+
   return (
     <div className="edits-block-container">
       <Title level={5} style={{ marginBottom: '32px' }}>
@@ -31,35 +50,12 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
         <Col xs={24} sm={24} md={24} lg={16} xl={12}>
           <Timeline>
             {edits.map((edit) => {
-              const isTextEdit =
-                edit.field === 'TITLE' || edit.field === 'DESCRIPTION';
-
               return (
                 <Timeline.Item className="edit" key={edit.id}>
                   <Comment
                     author={getTicketEditingDescription(edit)}
                     avatar={<UserAvatar user={edit.editor} />}
-                    content={
-                      <div className="edit-content">
-                        {isTextEdit && <TextEditContent edit={edit} />}
-
-                        {edit.field === 'ESTIMATE' && (
-                          <EstimateEditContent edit={edit} />
-                        )}
-
-                        {edit.field === 'ASSIGNEE' && (
-                          <AssigneeEditContent edit={edit} />
-                        )}
-
-                        {edit.field === 'STATUS' && (
-                          <StatusEditContent edit={edit} />
-                        )}
-
-                        {edit.field === 'TYPE' && (
-                          <TypeEditContent edit={edit} />
-                        )}
-                      </div>
-                    }
+                    content={getContentView(edit)}
                     datetime={
                       <Tooltip title={formatDate(edit.editedAt)}>
                         {formatRelativeDate(edit.editedAt)}
