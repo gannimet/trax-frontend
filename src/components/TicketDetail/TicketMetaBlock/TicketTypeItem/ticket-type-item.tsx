@@ -1,13 +1,13 @@
-import { Tag } from 'antd';
 import React from 'react';
 import { TicketTypeObj } from '../../../../models/ticket.models';
 import AutocompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
+import TicketTypeTag from '../../../TicketTypeTag/ticket-type-tag';
 import { TicketTypeItemProps } from './ticket-type-item.types';
 
 const TicketTypeItem = React.memo<TicketTypeItemProps>(
   ({ ticket, onEditSubmit, convertibleTypes }) => {
     const renderTypeOptionView = (type: TicketTypeObj) => {
-      return <Tag color="purple">{type.name}</Tag>;
+      return <TicketTypeTag name={type.name} />;
     };
 
     const getFilteredTypeOptions = (

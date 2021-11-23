@@ -14,6 +14,7 @@ import StatusEditContent from './StatusEditContent/status-edit-content';
 import TextEditContent from './TextEditContent/text-edit-content';
 import './ticket-edits-block.scss';
 import { TicketEditsBlockProps } from './ticket-edits-block.types';
+import TypeEditContent from './TypeEditContent/type-edit-content';
 
 const { Title } = Typography;
 
@@ -52,6 +53,10 @@ const TicketEditsBlock = React.memo<TicketEditsBlockProps>(({ ticket }) => {
 
                         {edit.field === 'STATUS' && (
                           <StatusEditContent edit={edit} />
+                        )}
+
+                        {edit.field === 'TYPE' && (
+                          <TypeEditContent edit={edit} />
                         )}
                       </div>
                     }

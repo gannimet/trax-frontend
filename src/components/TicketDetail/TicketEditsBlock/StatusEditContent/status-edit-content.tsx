@@ -1,16 +1,19 @@
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Space, Tag } from 'antd';
+import { Space } from 'antd';
 import React from 'react';
+import TicketStatusTag from '../../../TicketStatusTag/ticket-status-tag';
 import { StatusEditContentProps } from './status-edit-content.types';
 
 const StatusEditContent = React.memo<StatusEditContentProps>(({ edit }) => {
   return (
     <Space>
       Previously:
-      <Tag color="green">{edit.previousStatus?.name}</Tag>
+      {edit.previousStatus?.name && (
+        <TicketStatusTag name={edit.previousStatus.name} />
+      )}
       <ArrowRightOutlined />
       Now:
-      <Tag color="green">{edit.newStatus?.name}</Tag>
+      {edit.newStatus?.name && <TicketStatusTag name={edit.newStatus.name} />}
     </Space>
   );
 });

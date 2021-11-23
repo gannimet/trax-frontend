@@ -1,13 +1,13 @@
-import { Tag } from 'antd';
 import React from 'react';
 import { TicketStatus } from '../../../../models/ticket.models';
 import AutoCompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
+import TicketStatusTag from '../../../TicketStatusTag/ticket-status-tag';
 import { TicketStatusItemProps } from './ticket-status-item.types';
 
 const TicketStatusItem = React.memo<TicketStatusItemProps>(
   ({ ticket, statusOptions, onEditSubmit }) => {
     const renderStatusOptionView = (status: TicketStatus) => {
-      return <Tag color="green">{status.name}</Tag>;
+      return <TicketStatusTag name={status.name} />;
     };
 
     const getPossibleStatusOptions = () => {
