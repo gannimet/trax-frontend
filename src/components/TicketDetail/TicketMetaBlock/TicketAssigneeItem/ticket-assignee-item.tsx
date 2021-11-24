@@ -79,6 +79,7 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(
       <Space
         className={isEditing ? 'assignee-is-editing' : ''}
         style={{ width: '100%' }}
+        wrap
       >
         <div style={isEditing ? { width: '100%' } : {}}>
           <AutoCompleteInlineEdit
