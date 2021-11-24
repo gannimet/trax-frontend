@@ -89,6 +89,7 @@ const TicketAssigneeItem = React.memo<TicketAssigneeItemProps>(
             onSubmit={onSelectAssignee}
             onCancel={onCancel}
             onStartEditing={() => setIsEditing(true)}
+            defaultOpen={false}
           >
             {ticket.assignee && renderAssigneOptionView(ticket.assignee)}
             {!ticket.assignee && 'Unassigned'}

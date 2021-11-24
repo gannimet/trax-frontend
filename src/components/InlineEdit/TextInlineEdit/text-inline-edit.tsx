@@ -1,7 +1,6 @@
 import { Input } from 'antd';
 import React, { BaseSyntheticEvent, useRef, useState } from 'react';
 import BaseInlineEdit from '../base-inline-edit';
-import './text-inline-edit.scss';
 import { TextInlineEditProps } from './text-inline-edit.types';
 
 function TextInlineEdit<V>({
@@ -71,6 +70,7 @@ function TextInlineEdit<V>({
           onChange={onInputChange}
           type={isNumeric ? 'number' : 'text'}
           pattern={isNumeric ? '^[0-9]*$' : undefined}
+          style={{ width: 'calc(100% - 67px)' }}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           ref={inputRef}

@@ -2,7 +2,6 @@ import { AutoComplete } from 'antd';
 import React, { Key, useEffect, useRef, useState } from 'react';
 import { useCache } from '../../../hooks/use-cache';
 import BaseInlineEdit from '../base-inline-edit';
-import './autocomplete-inline-edit.scss';
 import { AutoCompleteInlineEditProps } from './autocomplete-inline-edit.types';
 
 function AutoCompleteInlineEdit<V extends { id: string } | string>({
@@ -17,6 +16,7 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
   className,
   allowEdits,
   placeholder = 'Type to search …',
+  defaultOpen = true,
 }: AutoCompleteInlineEditProps<V>) {
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<V[]>([]);
   const [getOptionsCacheItem, setOptionsCacheItem, clearOptionsCache] =
@@ -133,10 +133,10 @@ function AutoCompleteInlineEdit<V extends { id: string } | string>({
         onSearch={handleSearch}
         options={options}
         onSelect={onSelectOption}
-        backfill={true}
+        backfill
         placeholder={placeholder}
-        defaultOpen={true}
-        autoFocus={true}
+        defaultOpen={defaultOpen}
+        autoFocus
       />
     );
   };

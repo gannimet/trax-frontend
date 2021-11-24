@@ -14,4 +14,5 @@ export interface AutoCompleteInlineEditProps<
   className?: string;
   allowEdits?: boolean;
   placeholder?: string;
+  defaultOpen?: boolean;
 }

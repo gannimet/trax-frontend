@@ -13,13 +13,14 @@ import TicketTypeItem from './TicketTypeItem/ticket-type-item';
 const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
   ({ ticket, statusInfo, convertibleTypes, onEditSubmit, allowEdits }) => {
     const screens = useBreakpoint();
+    console.log('screens:', screens);
 
     return (
       <Descriptions
         bordered
         column={{ xl: 2, md: 1, sm: 1, xs: 1 }}
         labelStyle={{ width: '200px' }}
-        contentStyle={screens.sm ? {} : { width: '35%' }}
+        contentStyle={screens.xxl ? { width: '35%' } : {}}
       >
         <Descriptions.Item label="Created At">
           {formatDate(ticket.createdAt)}
