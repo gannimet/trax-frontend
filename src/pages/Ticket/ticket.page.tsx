@@ -9,7 +9,7 @@ import {
   Tabs,
   Typography,
 } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Dispatch } from 'redux';
@@ -19,6 +19,7 @@ import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
 import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
+import { NavigationContext } from '../../context/navigation.context';
 import { useCurrentUserId } from '../../hooks/use-auth';
 import {
   TicketEditField,
@@ -56,6 +57,7 @@ const { TabPane } = Tabs;
 const TicketPage = React.memo(
   () => {
     const { issueNumber } = useParams<TicketPageParams>();
+    const navigationContext = useContext(NavigationContext);
 
     const dispatch: ThunkDispatch<
       StoreStateType,
@@ -97,6 +99,17 @@ const TicketPage = React.memo(
       }
 
       if (ticket?.id) {
+        navigationContext.setNavigationItems([
+          { label: 'Home', href: '/overview' },
+          {
+            label: ticket.sprint?.team?.name ?? '',
+            href: `/team/${ticket.sprint?.team?.id}`,
+          },
+          {
+            label: `Ticket #${ticket.issueNumber}`,
+            href: `/ticket/${ticket.issueNumber}`,
+          },
+        ]);
         dispatch(fetchTicketTypes());
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
