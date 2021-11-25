@@ -16,7 +16,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
 
     return (
       <Row>
-        <Col xxl={12} xl={12} lg={24}>
+        <Col xl={12} span={24}>
           <Descriptions bordered column={1} labelStyle={{ width: 200 }}>
             <Descriptions.Item label="Created At">
               {formatDate(ticket.createdAt)}
@@ -36,7 +36,7 @@ const TicketMetaBlock = React.memo<TicketMetaBlockProps>(
           </Descriptions>
         </Col>
 
-        <Col xxl={12} xl={12} lg={24}>
+        <Col xl={12} span={24}>
           <Descriptions
             bordered
             column={1}
