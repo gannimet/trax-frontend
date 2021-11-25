@@ -40,6 +40,7 @@ import { TicketStatusInfoState } from '../../state/reducers/ticket-status.reduce
 import { TicketTypesState } from '../../state/reducers/ticket-type.reducer';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
+import { getTicketBreadcrumbItems } from '../../utils/navigation.utils';
 import {
   ticketsStateEqualityFn,
   ticketStatusInfoStateEqualityFn,
@@ -99,19 +100,13 @@ const TicketPage = React.memo(
       }
 
       if (ticket?.id) {
-        navigationContext.setNavigationItems([
-          { label: 'Home', href: '/overview' },
-          {
-            label: ticket.sprint?.team?.name ?? '',
-            href: `/team/${ticket.sprint?.team?.id}`,
-          },
-          {
-            label: `Ticket #${ticket.issueNumber}`,
-            href: `/ticket/${ticket.issueNumber}`,
-          },
-        ]);
+        navigationContext.setNavigationItems(getTicketBreadcrumbItems(ticket));
         dispatch(fetchTicketTypes());
       }
+
+      return () => {
+        navigationContext.setNavigationItems([]);
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket?.id]);
 
