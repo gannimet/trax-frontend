@@ -1,4 +1,4 @@
-import { NavigationContextValueItem } from '../context/navigation.context.types';
+import { NavigationContextValueItem } from '../context/NavigationContext/navigation.context.types';
 import { Team } from '../models/team.models';
 import { Ticket } from '../models/ticket.models';
 

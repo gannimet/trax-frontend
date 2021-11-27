@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   Comment,
+  Empty,
   Form,
   Input,
   List,
@@ -78,26 +79,36 @@ const TicketCommentBlock = React.memo<TicketCommentBlockProps>(
 
           <Row>
             <Col xs={24} sm={24} md={24} lg={16} xl={12}>
-              <List
-                bordered
-                dataSource={comments}
-                renderItem={(comment) => {
-                  return (
-                    <List.Item>
-                      <Comment
-                        author={<UserLink user={comment.author} />}
-                        avatar={<UserAvatar user={comment.author} />}
-                        content={comment.text}
-                        datetime={
-                          <Tooltip title={formatDate(comment.createdAt)}>
-                            {formatRelativeDate(comment.createdAt)}
-                          </Tooltip>
-                        }
-                      />
-                    </List.Item>
-                  );
-                }}
-              />
+              {comments.length > 0 && (
+                <List
+                  bordered
+                  dataSource={comments}
+                  rowKey="id"
+                  renderItem={(comment) => {
+                    return (
+                      <List.Item>
+                        <Comment
+                          author={<UserLink user={comment.author} />}
+                          avatar={<UserAvatar user={comment.author} />}
+                          content={comment.text}
+                          datetime={
+                            <Tooltip title={formatDate(comment.createdAt)}>
+                              {formatRelativeDate(comment.createdAt)}
+                            </Tooltip>
+                          }
+                        />
+                      </List.Item>
+                    );
+                  }}
+                />
+              )}
+
+              {comments.length === 0 && (
+                <Empty
+                  description="No comments on this issue yet."
+                  imageStyle={{ height: 60 }}
+                />
+              )}
             </Col>
           </Row>
         </Space>

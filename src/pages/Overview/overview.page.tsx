@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import PageTitle from '../../components/PageTitle/page-title';
-import { NavigationContext } from '../../context/navigation.context';
+import { NavigationContext } from '../../context/NavigationContext/navigation.context';
 import {
   UserTeamsActions,
   UserTeamsReducerAction,

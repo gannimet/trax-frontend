@@ -19,7 +19,7 @@ import TicketCommentBlock from '../../components/TicketDetail/TicketCommentBlock
 import TicketDetailTitle from '../../components/TicketDetail/TicketDetailTitle/ticket-detail-title';
 import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/ticket-edits-block';
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
-import { NavigationContext } from '../../context/navigation.context';
+import { NavigationContext } from '../../context/NavigationContext/navigation.context';
 import { useCurrentUserId } from '../../hooks/use-auth';
 import {
   TicketEditField,

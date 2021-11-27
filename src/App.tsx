@@ -10,6 +10,7 @@ import Routes from './constants/routes';
 import { StorageItem } from './constants/storage';
 import FullPageLayout from './layouts/FullPageLayout/full-page.layout';
 import NakedLayout from './layouts/NakedLayout/naked.layout';
+import CreateTicketPage from './pages/CreateTicket/create-ticket.page';
 import LoginPage from './pages/Login/login.page';
 import OverviewPage from './pages/Overview/overview.page';
 import TeamPage from './pages/Team/team.page';
@@ -71,6 +72,11 @@ const App: React.FC = () => {
                 exact
                 path={Routes.Ticket.path}
                 component={TicketPage}
+              />
+              <ProtectedRoute
+                exact
+                path={Routes.CreateTicket.path}
+                component={CreateTicketPage}
               />
             </Switch>
           </FullPageLayout>

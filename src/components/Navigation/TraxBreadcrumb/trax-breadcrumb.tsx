@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { NavigationContext } from '../../../context/navigation.context';
+import { NavigationContext } from '../../../context/NavigationContext/navigation.context';
 import { TraxBreadcrumbProps } from './trax-breadcrumb.types';
 
 const TraxBreadcrumb = React.memo<TraxBreadcrumbProps>(({ className = '' }) => {

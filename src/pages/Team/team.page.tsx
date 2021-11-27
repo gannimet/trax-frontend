@@ -18,7 +18,8 @@ import PageTitle from '../../components/PageTitle/page-title';
 import SprintTicketListFooter from '../../components/SprintTicketList/SprintTicketListFooter/sprint-ticket-list-footer';
 import SprintTicketListHeader from '../../components/SprintTicketList/SprintTicketListHeader/sprint-ticket-list-header';
 import SprintTicketListItem from '../../components/SprintTicketList/SprintTicketListItem/sprint-ticket-list-item';
-import { NavigationContext } from '../../context/navigation.context';
+import { CurrentTeamContext } from '../../context/CurrentTeamContext/current-team.context';
+import { NavigationContext } from '../../context/NavigationContext/navigation.context';
 import { Sprint } from '../../models/team.models';
 import {
   UserTeamsActions,
@@ -43,6 +44,7 @@ const TeamPage: React.FC = () => {
     useSelector<StoreStateType, UserTeamsState>((state) => state.userTeams);
   const { fetchTeamDetailsOfUser } = new UserTeamsActions();
   const navigationContext = useContext(NavigationContext);
+  const teamContext = useContext(CurrentTeamContext);
 
   useEffect(() => {
     dispatch(fetchTeamDetailsOfUser(teamId));
@@ -53,6 +55,10 @@ const TeamPage: React.FC = () => {
     navigationContext.setNavigationItems(
       getTeamBreadcrumbItems(currentTeamInfos?.team),
     );
+
+    if (currentTeamInfos?.team) {
+      teamContext.setCurrentTeam(currentTeamInfos.team);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTeamInfos?.team.id]);
 
