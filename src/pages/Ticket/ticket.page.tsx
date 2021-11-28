@@ -31,7 +31,10 @@ import {
   TicketStatusActions,
   TicketStatusReducerAction,
 } from '../../state/actions/ticket-status.actions';
-import { TicketTypeActions } from '../../state/actions/ticket-type.actions';
+import {
+  TicketTypeActions,
+  TicketTypesReducerAction,
+} from '../../state/actions/ticket-type.actions';
 import {
   TicketsActions,
   TicketsReducerAction,
@@ -63,9 +66,17 @@ const TicketPage = React.memo(
     const dispatch: ThunkDispatch<
       StoreStateType,
       void,
-      TicketsReducerAction | TicketStatusReducerAction
+      | TicketsReducerAction
+      | TicketStatusReducerAction
+      | TicketTypesReducerAction
     > =
-      useDispatch<Dispatch<TicketsReducerAction | TicketStatusReducerAction>>();
+      useDispatch<
+        Dispatch<
+          | TicketsReducerAction
+          | TicketStatusReducerAction
+          | TicketTypesReducerAction
+        >
+      >();
 
     const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
       StoreStateType,
