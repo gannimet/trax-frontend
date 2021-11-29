@@ -21,6 +21,7 @@ import TicketEditsBlock from '../../components/TicketDetail/TicketEditsBlock/tic
 import TicketMetaBlock from '../../components/TicketDetail/TicketMetaBlock/ticket-meta-block';
 import { NavigationContext } from '../../context/NavigationContext/navigation.context';
 import { useCurrentUserId } from '../../hooks/use-auth';
+import { useTicketTypes } from '../../hooks/use-ticket-types';
 import {
   TicketEditField,
   TicketStatus,
@@ -32,22 +33,16 @@ import {
   TicketStatusReducerAction,
 } from '../../state/actions/ticket-status.actions';
 import {
-  TicketTypeActions,
-  TicketTypesReducerAction,
-} from '../../state/actions/ticket-type.actions';
-import {
   TicketsActions,
   TicketsReducerAction,
 } from '../../state/actions/tickets.actions';
 import { TicketStatusInfoState } from '../../state/reducers/ticket-status.reducer';
-import { TicketTypesState } from '../../state/reducers/ticket-type.reducer';
 import { TicketsState } from '../../state/reducers/tickets.reducer';
 import { StoreStateType } from '../../state/root.reducer';
 import { getTicketBreadcrumbItems } from '../../utils/navigation.utils';
 import {
   ticketsStateEqualityFn,
   ticketStatusInfoStateEqualityFn,
-  ticketTypesStateEqualityFn,
 } from '../../utils/state-utils';
 import './ticket.page.scss';
 
@@ -66,17 +61,9 @@ const TicketPage = React.memo(
     const dispatch: ThunkDispatch<
       StoreStateType,
       void,
-      | TicketsReducerAction
-      | TicketStatusReducerAction
-      | TicketTypesReducerAction
+      TicketsReducerAction | TicketStatusReducerAction
     > =
-      useDispatch<
-        Dispatch<
-          | TicketsReducerAction
-          | TicketStatusReducerAction
-          | TicketTypesReducerAction
-        >
-      >();
+      useDispatch<Dispatch<TicketsReducerAction | TicketStatusReducerAction>>();
 
     const { ticket, ticketError, ticketLoading, editTicketError } = useSelector<
       StoreStateType,
@@ -86,15 +73,11 @@ const TicketPage = React.memo(
       StoreStateType,
       TicketStatusInfoState
     >((state) => state.ticketStatusInfo, ticketStatusInfoStateEqualityFn);
-    const { ticketTypes, ticketTypesLoading } = useSelector<
-      StoreStateType,
-      TicketTypesState
-    >((state) => state.ticketTypes, ticketTypesStateEqualityFn);
+    const { ticketTypes, ticketTypesLoading } = useTicketTypes();
 
     const { fetchTicketByIssueNumber, postTicketComment, editTicket } =
       new TicketsActions();
     const { fetchTicketStatusTransitions } = new TicketStatusActions();
-    const { fetchTicketTypes } = new TicketTypeActions();
 
     const currentUserId = useCurrentUserId();
 
@@ -112,7 +95,6 @@ const TicketPage = React.memo(
 
       if (ticket?.id) {
         navigationContext.setNavigationItems(getTicketBreadcrumbItems(ticket));
-        dispatch(fetchTicketTypes());
       }
 
       return () => {

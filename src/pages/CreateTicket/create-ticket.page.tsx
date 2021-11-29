@@ -25,28 +25,30 @@ const CreateTicketPage = React.memo(() => {
 
   const renderContent = () => {
     if (isLoading) {
-      <Skeleton />;
+      return <Skeleton />;
     }
 
     return renderTicketForm();
   };
 
   const renderTicketForm = () => {
+    if (!ticketTypes) {
+      return null;
+    }
+
+    const convertibleTypes = ticketTypes.filter((type) => type.convertible);
+
+    const initialValues = {
+      type: convertibleTypes[0].id,
+    };
+
     return (
       <>
         <PageTitle>Create ticket</PageTitle>
 
-        <ul>
-          {ticketTypes &&
-            ticketTypes.length > 0 &&
-            ticketTypes?.map((type) => {
-              return <li key={type.id}>{type.name}</li>;
-            })}
-        </ul>
-
         <Row>
           <Col xxl={16} span={24}>
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" initialValues={initialValues}>
               <Form.Item
                 name="title"
                 label="Title"
@@ -56,7 +58,15 @@ const CreateTicketPage = React.memo(() => {
               </Form.Item>
 
               <Form.Item name="type" label="Type" rules={[{ required: true }]}>
-                <Select></Select>
+                <Select>
+                  {convertibleTypes.map((type) => {
+                    return (
+                      <Select.Option key={type.id} value={type.id}>
+                        {type.name}
+                      </Select.Option>
+                    );
+                  })}
+                </Select>
               </Form.Item>
 
               <Form.Item name="team" label="Team" rules={[{ required: true }]}>
