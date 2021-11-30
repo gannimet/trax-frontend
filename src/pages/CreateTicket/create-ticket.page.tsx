@@ -13,6 +13,7 @@ import React, { useContext } from 'react';
 import PageTitle from '../../components/PageTitle/page-title';
 import { CurrentTeamContext } from '../../context/CurrentTeamContext/current-team.context';
 import { useTicketTypes } from '../../hooks/use-ticket-types';
+import { useUserTeams } from '../../hooks/use-user-teams';
 
 const { TextArea } = Input;
 
@@ -20,8 +21,9 @@ const CreateTicketPage = React.memo(() => {
   const teamContext = useContext(CurrentTeamContext);
   const [form] = Form.useForm();
   const { ticketTypes, ticketTypesLoading } = useTicketTypes();
+  const { allTeamsInfos, allTeamsInfosLoading } = useUserTeams();
 
-  const isLoading = ticketTypesLoading;
+  const isLoading = ticketTypesLoading || allTeamsInfosLoading;
 
   const renderContent = () => {
     if (isLoading) {
@@ -32,7 +34,7 @@ const CreateTicketPage = React.memo(() => {
   };
 
   const renderTicketForm = () => {
-    if (!ticketTypes) {
+    if (!ticketTypes || !allTeamsInfos) {
       return null;
     }
 
@@ -40,6 +42,7 @@ const CreateTicketPage = React.memo(() => {
 
     const initialValues = {
       type: convertibleTypes[0].id,
+      team: teamContext.currentTeam?.id,
     };
 
     return (
@@ -71,11 +74,16 @@ const CreateTicketPage = React.memo(() => {
 
               <Form.Item name="team" label="Team" rules={[{ required: true }]}>
                 <Select>
-                  {teamContext.currentTeam && (
-                    <Select.Option value={teamContext.currentTeam.id}>
-                      {teamContext.currentTeam.name}
-                    </Select.Option>
-                  )}
+                  {allTeamsInfos.map((teamInfo) => {
+                    return (
+                      <Select.Option
+                        key={teamInfo.team.id}
+                        value={teamInfo.team.id}
+                      >
+                        {teamInfo.team.name}
+                      </Select.Option>
+                    );
+                  })}
                 </Select>
               </Form.Item>
 

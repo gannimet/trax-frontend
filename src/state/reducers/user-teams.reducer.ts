@@ -8,6 +8,7 @@ import {
 export interface UserTeamsState {
   allTeamsInfos?: UserTeamInfo[];
   allTeamsInfosError?: Error;
+  allTeamsInfosLoading: boolean;
   currentTeamInfos?: UserTeamInfo;
   currentTeamInfosError?: Error;
   currentTeamInfosLoading: boolean;
@@ -17,6 +18,7 @@ export interface UserTeamsState {
 }
 
 export const userTeamsInitialState: UserTeamsState = {
+  allTeamsInfosLoading: false,
   currentTeamInfosLoading: false,
   teamUsersLoading: false,
 };
@@ -28,11 +30,22 @@ export const userTeamsReducer: Reducer<UserTeamsState, UserTeamsReducerAction> =
         return {
           ...state,
           allTeamsInfos: action.teamsInfos,
+          allTeamsInfosError: undefined,
+          allTeamsInfosLoading: false,
         };
       case UserTeamsActions.FETCH_TEAMS_OF_USER_ERROR:
         return {
           ...state,
+          allTeamsInfos: undefined,
           allTeamsInfosError: action.error,
+          allTeamsInfosLoading: false,
+        };
+      case UserTeamsActions.FETCH_TEAMS_OF_USER_LOADING:
+        return {
+          ...state,
+          allTeamsInfos: undefined,
+          allTeamsInfosError: undefined,
+          allTeamsInfosLoading: true,
         };
       case UserTeamsActions.FETCH_TEAM_DETAILS_SUCCESS:
         return {

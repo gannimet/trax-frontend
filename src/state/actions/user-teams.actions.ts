@@ -5,6 +5,7 @@ import TeamService from '../../services/team.service';
 export class UserTeamsActions {
   static readonly FETCH_TEAMS_OF_USER_SUCCESS = 'FETCH_TEAMS_OF_USER_SUCCESS';
   static readonly FETCH_TEAMS_OF_USER_ERROR = 'FETCH_TEAMS_OF_USER_ERROR';
+  static readonly FETCH_TEAMS_OF_USER_LOADING = 'FETCH_TEAMS_OF_USER_LOADING';
 
   static readonly FETCH_TEAM_DETAILS_SUCCESS = 'FETCH_TEAM_DETAILS_SUCCESS';
   static readonly FETCH_TEAM_DETAILS_ERROR = 'FETCH_TEAM_DETAILS_ERROR';
@@ -18,6 +19,10 @@ export class UserTeamsActions {
 
   fetchTeamsOfUser = () => {
     return (dispatch: Dispatch): Promise<TeamsOfUserAction> => {
+      dispatch({
+        type: UserTeamsActions.FETCH_TEAMS_OF_USER_LOADING as typeof UserTeamsActions.FETCH_TEAMS_OF_USER_LOADING,
+      });
+
       return this.teamService.getTeamsForUser().then(
         (teamsInfos) => {
           return dispatch({
@@ -89,7 +94,8 @@ export type UserTeamsReducerAction =
 
 export type TeamsOfUserAction =
   | FetchTeamsOfUserSuccessAction
-  | FetchTeamsOfUserErrorAction;
+  | FetchTeamsOfUserErrorAction
+  | FetchTeamsOfUserLoadingAction;
 
 export type TeamDetailsAction =
   | FetchTeamDetailsSuccessAction
@@ -109,6 +115,10 @@ export interface FetchTeamsOfUserSuccessAction {
 export interface FetchTeamsOfUserErrorAction {
   type: typeof UserTeamsActions.FETCH_TEAMS_OF_USER_ERROR;
   error: Error;
+}
+
+export interface FetchTeamsOfUserLoadingAction {
+  type: typeof UserTeamsActions.FETCH_TEAMS_OF_USER_LOADING;
 }
 
 export interface FetchTeamDetailsSuccessAction {

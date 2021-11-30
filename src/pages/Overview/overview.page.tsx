@@ -1,32 +1,16 @@
 import { Alert, Card, Col, Empty, List, Row } from 'antd';
 import React, { useContext, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Dispatch } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import PageTitle from '../../components/PageTitle/page-title';
 import { NavigationContext } from '../../context/NavigationContext/navigation.context';
-import {
-  UserTeamsActions,
-  UserTeamsReducerAction,
-} from '../../state/actions/user-teams.actions';
-import { UserTeamsState } from '../../state/reducers/user-teams.reducer';
-import { StoreStateType } from '../../state/root.reducer';
+import { useUserTeams } from '../../hooks/use-user-teams';
 import { getHomeBreadcrumbItems } from '../../utils/navigation.utils';
 
 const OverviewPage: React.FC = () => {
-  const dispatch: ThunkDispatch<StoreStateType, void, UserTeamsReducerAction> =
-    useDispatch<Dispatch<UserTeamsReducerAction>>();
-  const { allTeamsInfos, allTeamsInfosError } = useSelector<
-    StoreStateType,
-    UserTeamsState
-  >((state) => state.userTeams);
+  const { allTeamsInfos, allTeamsInfosError } = useUserTeams();
   const navigationContext = useContext(NavigationContext);
 
-  const { fetchTeamsOfUser } = new UserTeamsActions();
-
   useEffect(() => {
-    dispatch(fetchTeamsOfUser());
     navigationContext.setNavigationItems(getHomeBreadcrumbItems());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
