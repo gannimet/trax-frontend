@@ -1,6 +1,6 @@
 import React from 'react';
 import { TicketStatus } from '../../../../models/ticket.models';
-import AutoCompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
+import DropdownInlineEdit from '../../../InlineEdit/DropdownInlineEdit/dropdown-inline-edit';
 import TicketStatusTag from '../../../TicketStatusTag/ticket-status-tag';
 import { TicketStatusItemProps } from './ticket-status-item.types';
 
@@ -19,38 +19,27 @@ const TicketStatusItem = React.memo<TicketStatusItemProps>(
       ).map((transition) => transition.nextStatus);
     };
 
-    const getFilteredStatusOptions = (
-      searchValue: string,
-    ): Promise<TicketStatus[]> => {
-      const possibleStatuses = getPossibleStatusOptions();
-
-      return Promise.resolve(
-        possibleStatuses.filter((status) => {
-          return status.name.toLowerCase().includes(searchValue.toLowerCase());
-        }),
-      );
-    };
-
-    const getStatusDisplayValueFromOption = (status: TicketStatus) => {
-      return status.name;
-    };
-
     const onSelectStatus = (statusId: string) => {
       if (ticket.status.id !== statusId) {
         onEditSubmit(statusId);
       }
     };
 
+    const getLabelValue = (status: TicketStatus): string => {
+      return status.name;
+    };
+
     return (
-      <AutoCompleteInlineEdit
-        value={ticket.status}
+      <DropdownInlineEdit
+        value={null}
+        options={getPossibleStatusOptions()}
         getOptionView={renderStatusOptionView}
-        getFilteredOptions={getFilteredStatusOptions}
-        getDisplayValue={getStatusDisplayValueFromOption}
+        getLabelValue={getLabelValue}
         onSubmit={onSelectStatus}
+        placeholder="Select new status"
       >
         {renderStatusOptionView(ticket.status)}
-      </AutoCompleteInlineEdit>
+      </DropdownInlineEdit>
     );
   },
 );
