@@ -79,7 +79,8 @@ function DropdownInlineEdit<V extends { id: string } | string>({
     return (
       <Select
         ref={inputRef}
-        value={getAtomicValue(value)}
+        defaultValue={getAtomicValue(value)}
+        value={selectedValue}
         optionLabelProp="label"
         placeholder={placeholder}
         style={{ width: 'calc(100% - 67px)' }}

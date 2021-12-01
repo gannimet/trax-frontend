@@ -1,6 +1,6 @@
 import React from 'react';
 import { TicketTypeObj } from '../../../../models/ticket.models';
-import AutocompleteInlineEdit from '../../../InlineEdit/AutCompleteInlineEdit/autocomplete-inline-edit';
+import DropdownInlineEdit from '../../../InlineEdit/DropdownInlineEdit/dropdown-inline-edit';
 import TicketTypeTag from '../../../TicketTypeTag/ticket-type-tag';
 import { TicketTypeItemProps } from './ticket-type-item.types';
 
@@ -10,17 +10,7 @@ const TicketTypeItem = React.memo<TicketTypeItemProps>(
       return <TicketTypeTag name={type.name} />;
     };
 
-    const getFilteredTypeOptions = (
-      searchValue: string,
-    ): Promise<TicketTypeObj[]> => {
-      return Promise.resolve(
-        convertibleTypes.filter((type) => {
-          return type.name.toLowerCase().includes(searchValue.toLowerCase());
-        }),
-      );
-    };
-
-    const getTypeDisplayValue = (type: TicketTypeObj) => {
+    const getLabelValue = (type: TicketTypeObj) => {
       return type.name;
     };
 
@@ -31,15 +21,15 @@ const TicketTypeItem = React.memo<TicketTypeItemProps>(
     };
 
     return (
-      <AutocompleteInlineEdit
+      <DropdownInlineEdit
         value={ticket.type}
+        options={convertibleTypes}
         getOptionView={renderTypeOptionView}
-        getFilteredOptions={getFilteredTypeOptions}
-        getDisplayValue={getTypeDisplayValue}
+        getLabelValue={getLabelValue}
         onSubmit={onSelectType}
       >
         {renderTypeOptionView(ticket.type)}
-      </AutocompleteInlineEdit>
+      </DropdownInlineEdit>
     );
   },
 );
