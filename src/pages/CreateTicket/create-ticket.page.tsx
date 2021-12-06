@@ -8,22 +8,68 @@ import {
   Row,
   Select,
   Skeleton,
+  Spin,
+  Tag,
 } from 'antd';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import PageTitle from '../../components/PageTitle/page-title';
 import { CurrentTeamContext } from '../../context/CurrentTeamContext/current-team.context';
 import { useTicketTypes } from '../../hooks/use-ticket-types';
 import { useUserTeams } from '../../hooks/use-user-teams';
+import {
+  TagsActions,
+  TagsReducerAction,
+} from '../../state/actions/tags.actions';
+import { TagsState } from '../../state/reducers/tags.reducer';
+import { StoreStateType } from '../../state/root.reducer';
 
 const { TextArea } = Input;
+
+type OptionData = {
+  key?: string;
+  label: React.ReactNode;
+  value: string;
+};
 
 const CreateTicketPage = React.memo(() => {
   const teamContext = useContext(CurrentTeamContext);
   const [form] = Form.useForm();
   const { ticketTypes, ticketTypesLoading } = useTicketTypes();
   const { allTeamsInfos, allTeamsInfosLoading } = useUserTeams();
+  const [tagOptions, setTagOptions] = useState<OptionData[]>([]);
+  const dispatch: ThunkDispatch<StoreStateType, void, TagsReducerAction> =
+    useDispatch<Dispatch<TagsReducerAction>>();
+  const { tags, tagsLoading } = useSelector<StoreStateType, TagsState>(
+    (state) => state.tags,
+  );
 
+  useEffect(() => {
+    if (!tags) {
+      setTagOptions([]);
+
+      return;
+    }
+
+    setTagOptions(
+      tags.map((tag) => {
+        return {
+          key: tag.id,
+          value: tag.id,
+          label: <Tag color={`#${tag.color}`}>{tag.name}</Tag>,
+        };
+      }),
+    );
+  }, [tags]);
+
+  const { fetchTags } = new TagsActions();
   const isLoading = ticketTypesLoading || allTeamsInfosLoading;
+
+  const fetchFilteredTags = (searchValue: string) => {
+    dispatch(fetchTags(searchValue));
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -93,6 +139,15 @@ const CreateTicketPage = React.memo(() => {
                 rules={[{ required: true }]}
               >
                 <Select></Select>
+              </Form.Item>
+
+              <Form.Item name="tags" label="Tags">
+                <Select
+                  mode="multiple"
+                  options={tagOptions}
+                  onSearch={fetchFilteredTags}
+                  notFoundContent={tagsLoading ? <Spin size="small" /> : null}
+                ></Select>
               </Form.Item>
 
               <Form.Item name="assignee" label="Assignee">

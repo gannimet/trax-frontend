@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { AuthReducerAction } from './actions/auth.actions';
 import { authReducer } from './reducers/auth.reducer';
+import { tagsReducer } from './reducers/tags.reducer';
 import { ticketStatusInfoReducer } from './reducers/ticket-status.reducer';
 import { ticketTypesReducer } from './reducers/ticket-type.reducer';
 import { ticketsReducer } from './reducers/tickets.reducer';
@@ -12,6 +13,7 @@ export const rootReducer = combineReducers({
   tickets: ticketsReducer,
   ticketStatusInfo: ticketStatusInfoReducer,
   ticketTypes: ticketTypesReducer,
+  tags: tagsReducer,
 });
 
 export type StoreStateType = ReturnType<typeof rootReducer>;
