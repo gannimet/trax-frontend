@@ -1,12 +1,13 @@
-import { Select, Spin, Tag } from 'antd';
-import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { Button, Divider, Select, Spin, Tag } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
   TagsActions,
   TagsReducerAction,
 } from '../../../state/actions/tags.actions';
+import { TagsState } from '../../../state/reducers/tags.reducer';
 import { StoreStateType } from '../../../state/root.reducer';
 import { TagsSelectProps } from './tags-select.types';
 
@@ -18,39 +19,42 @@ type OptionData = {
 
 const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
   const [tagOptions, setTagOptions] = useState<OptionData[]>([]);
-  const [tagsFetching, setTagsFetching] = useState(false);
   const tagsFetchRef = useRef(0);
+  const { tags, tagsLoading } = useSelector<StoreStateType, TagsState>(
+    (state) => state.tags,
+  );
 
   const dispatch: ThunkDispatch<StoreStateType, void, TagsReducerAction> =
     useDispatch<Dispatch<TagsReducerAction>>();
 
   const { fetchTags } = new TagsActions();
 
-  const fetchFilteredTags = React.useMemo(() => {
-    return (searchValue: string) => {
-      tagsFetchRef.current += 1;
-      const fetchId = tagsFetchRef.current;
-      setTagOptions([]);
-      setTagsFetching(true);
+  const fetchFilteredTags = (searchValue: string) => {
+    tagsFetchRef.current += 1;
+    setTagOptions([]);
 
-      dispatch(fetchTags(searchValue)).then((action) => {
-        if (action.type === TagsActions.FETCH_TAGS_SUCCESS) {
-          if (fetchId === tagsFetchRef.current) {
-            setTagOptions(
-              action.tags.map((tag) => {
-                return {
-                  key: tag.id,
-                  value: tag.id,
-                  label: <Tag color={`#${tag.color}`}>{tag.name}</Tag>,
-                };
-              }),
-            );
-            setTagsFetching(false);
-          }
-        }
-      });
-    };
-  }, [dispatch, fetchTags]);
+    dispatch(fetchTags(searchValue));
+  };
+
+  useEffect(() => {
+    if (!tags) {
+      return;
+    }
+
+    const fetchId = tagsFetchRef.current;
+
+    if (fetchId === tagsFetchRef.current) {
+      setTagOptions(
+        tags.map((tag) => {
+          return {
+            key: tag.id,
+            value: tag.id,
+            label: <Tag color={`#${tag.color}`}>{tag.name}</Tag>,
+          };
+        }),
+      );
+    }
+  }, [tags]);
 
   return (
     <Select
@@ -59,8 +63,17 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
       filterOption={false}
       options={tagOptions}
       onSearch={fetchFilteredTags}
-      notFoundContent={tagsFetching ? <Spin size="small" /> : null}
+      notFoundContent={tagsLoading ? <Spin size="small" /> : null}
       onChange={onChange}
+      dropdownRender={(menu) => {
+        return (
+          <>
+            {menu}
+            <Divider style={{ margin: '4px 0' }} />
+            <Button>Hallo</Button>
+          </>
+        );
+      }}
     ></Select>
   );
 });

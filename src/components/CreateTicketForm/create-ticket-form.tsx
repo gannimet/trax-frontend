@@ -12,7 +12,9 @@ const CreateTicketForm = React.memo<CreateTicketFormProps>(
     const [form] = Form.useForm();
 
     const onTagsSelect = (values: string[]) => {
-      console.log('selected:', values);
+      form.setFieldsValue({
+        tags: values,
+      });
     };
 
     const convertibleTypes = ticketTypes.filter((type) => type.convertible);
