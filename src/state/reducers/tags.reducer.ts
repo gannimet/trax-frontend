@@ -6,10 +6,14 @@ export interface TagsState {
   tags?: TicketTag[];
   tagsError?: Error;
   tagsLoading: boolean;
+  newTag?: TicketTag;
+  newTagError?: Error;
+  newTagLoading: boolean;
 }
 
 export const tagsInitialState: TagsState = {
   tagsLoading: false,
+  newTagLoading: false,
 };
 
 export const tagsReducer: Reducer<TagsState, TagsReducerAction> = (
@@ -37,6 +41,27 @@ export const tagsReducer: Reducer<TagsState, TagsReducerAction> = (
         tags: undefined,
         tagsError: undefined,
         tagsLoading: true,
+      };
+    case TagsActions.CREATE_TAG_SUCCESS:
+      return {
+        ...state,
+        newTag: action.tag,
+        newTagError: undefined,
+        newTagLoading: false,
+      };
+    case TagsActions.CREATE_TAG_ERROR:
+      return {
+        ...state,
+        newTag: undefined,
+        newTagError: action.error,
+        newTagLoading: false,
+      };
+    case TagsActions.CREATE_TAG_LOADING:
+      return {
+        ...state,
+        newTag: undefined,
+        newTagError: undefined,
+        newTagLoading: true,
       };
     default:
       return { ...state };

@@ -12,6 +12,7 @@ const CreateTicketForm = React.memo<CreateTicketFormProps>(
     const [form] = Form.useForm();
 
     const onTagsSelect = (values: string[]) => {
+      console.log('Changed value of tags:', values);
       form.setFieldsValue({
         tags: values,
       });

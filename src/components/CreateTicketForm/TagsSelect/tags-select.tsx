@@ -1,8 +1,9 @@
-import { Button, Divider, Select, Spin, Tag } from 'antd';
+import { Select, Spin, Tag } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { TicketTag } from '../../../models/ticket.models';
 import {
   TagsActions,
   TagsReducerAction,
@@ -18,28 +19,29 @@ type OptionData = {
 };
 
 const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
+  const knownTags = useRef<Map<string, TicketTag>>(new Map());
   const [tagOptions, setTagOptions] = useState<OptionData[]>([]);
+  const [selectedTags, setSelectedTags] = useState<TicketTag[]>([]);
   const tagsFetchRef = useRef(0);
-  const { tags, tagsLoading } = useSelector<StoreStateType, TagsState>(
-    (state) => state.tags,
-  );
+  const { tags, tagsLoading, newTag, newTagLoading } = useSelector<
+    StoreStateType,
+    TagsState
+  >((state) => state.tags);
 
   const dispatch: ThunkDispatch<StoreStateType, void, TagsReducerAction> =
     useDispatch<Dispatch<TagsReducerAction>>();
 
-  const { fetchTags } = new TagsActions();
-
-  const fetchFilteredTags = (searchValue: string) => {
-    tagsFetchRef.current += 1;
-    setTagOptions([]);
-
-    dispatch(fetchTags(searchValue));
-  };
+  const { fetchTags, createTag } = new TagsActions();
 
   useEffect(() => {
     if (!tags) {
       return;
     }
+
+    // Search has loaded tags - remember them
+    tags.forEach((tag) => {
+      knownTags.current.set(tag.id, tag);
+    });
 
     const fetchId = tagsFetchRef.current;
 
@@ -56,24 +58,53 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
     }
   }, [tags]);
 
+  useEffect(() => {
+    if (!newTag) {
+      return;
+    }
+
+    // New tag was added and API call to create it has finished
+    knownTags.current.set(newTag.id, newTag);
+    setSelectedTags([...selectedTags, newTag]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newTag]);
+
+  useEffect(() => {
+    onChange(selectedTags.map((tag) => tag.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTags]);
+
+  const fetchFilteredTags = (searchValue: string) => {
+    tagsFetchRef.current += 1;
+    setTagOptions([]);
+
+    dispatch(fetchTags(searchValue));
+  };
+
+  const onTagSelect = (value: string) => {
+    if (knownTags.current.has(value)) {
+      console.log('Selected known tag with ID:', value);
+      const tag = knownTags.current.get(value);
+
+      if (tag) {
+        setSelectedTags([...selectedTags, tag]);
+      }
+    } else {
+      console.log('Selected new tag with text:', value);
+      dispatch(createTag(value));
+    }
+  };
+
   return (
     <Select
-      mode="multiple"
+      mode="tags"
       placeholder="Select tags"
       filterOption={false}
       options={tagOptions}
       onSearch={fetchFilteredTags}
       notFoundContent={tagsLoading ? <Spin size="small" /> : null}
-      onChange={onChange}
-      dropdownRender={(menu) => {
-        return (
-          <>
-            {menu}
-            <Divider style={{ margin: '4px 0' }} />
-            <Button>Hallo</Button>
-          </>
-        );
-      }}
+      onSelect={onTagSelect}
+      disabled={newTagLoading}
     ></Select>
   );
 });

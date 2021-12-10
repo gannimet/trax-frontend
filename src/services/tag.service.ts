@@ -7,6 +7,12 @@ class TagService extends HttpClientService {
       .get<TicketTag[]>(`/tags?searchValue=${searchValue}`)
       .then((response) => response.data);
   }
+
+  createTag(name: string): Promise<TicketTag> {
+    return TagService.getClientInstance()
+      .post<TicketTag>('/tags', { name })
+      .then((response) => response.data);
+  }
 }
 
 export default TagService;
