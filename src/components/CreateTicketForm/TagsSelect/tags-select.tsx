@@ -10,6 +10,7 @@ import {
 } from '../../../state/actions/tags.actions';
 import { TagsState } from '../../../state/reducers/tags.reducer';
 import { StoreStateType } from '../../../state/root.reducer';
+import { mergeTagsArrays } from '../../../utils/display.utils';
 import { TagsSelectProps } from './tags-select.types';
 
 type OptionData = {
@@ -46,8 +47,11 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
     const fetchId = tagsFetchRef.current;
 
     if (fetchId === tagsFetchRef.current) {
+      const knownTagArray = Array.from(knownTags.current.values());
+      const mergedOptions = mergeTagsArrays(knownTagArray, tags);
+
       setTagOptions(
-        tags.map((tag) => {
+        mergedOptions.map((tag) => {
           return {
             key: tag.id,
             value: tag.id,
@@ -83,14 +87,12 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
 
   const onTagSelect = (value: string) => {
     if (knownTags.current.has(value)) {
-      console.log('Selected known tag with ID:', value);
       const tag = knownTags.current.get(value);
 
       if (tag) {
         setSelectedTags([...selectedTags, tag]);
       }
     } else {
-      console.log('Selected new tag with text:', value);
       dispatch(createTag(value));
     }
   };

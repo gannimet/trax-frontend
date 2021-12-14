@@ -3,7 +3,7 @@ import RelativeTime from 'dayjs/plugin/relativeTime';
 import React from 'react';
 import UserLink from '../components/UserLink/user-link';
 import { AuthIdentity } from '../models/auth.models';
-import { TicketEdit } from '../models/ticket.models';
+import { TicketEdit, TicketTag } from '../models/ticket.models';
 
 dayjs.extend(RelativeTime);
 
@@ -55,4 +55,21 @@ export const getTicketEditingDescription = (
     default:
       return getUserFullName(editor);
   }
+};
+
+export const mergeTagsArrays = (
+  arr1: TicketTag[],
+  arr2: TicketTag[],
+): TicketTag[] => {
+  const result: TicketTag[] = [...arr1];
+
+  arr2.forEach((tag) => {
+    const foundInResult = !!result.find((item) => item.id === tag.id);
+
+    if (!foundInResult) {
+      result.push(tag);
+    }
+  });
+
+  return result;
 };
