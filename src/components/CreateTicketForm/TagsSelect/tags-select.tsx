@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { useClickOutside } from '../../../hooks/use-click-outside';
 import { TicketTag } from '../../../models/ticket.models';
 import {
   TagsActions,
@@ -21,8 +22,10 @@ type OptionData = {
 
 const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
   const knownTags = useRef<Map<string, TicketTag>>(new Map());
+  const containerRef = useRef<HTMLDivElement>(null);
   const [tagOptions, setTagOptions] = useState<OptionData[]>([]);
   const [selectedTags, setSelectedTags] = useState<TicketTag[]>([]);
+  const [searchValue, setSearchValue] = useState('');
   const tagsFetchRef = useRef(0);
   const { tags, tagsLoading, newTag, newTagLoading } = useSelector<
     StoreStateType,
@@ -79,11 +82,17 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
   }, [selectedTags]);
 
   const fetchFilteredTags = (searchValue: string) => {
+    setSearchValue(searchValue);
+
     tagsFetchRef.current += 1;
     setTagOptions([]);
 
     dispatch(fetchTags(searchValue));
   };
+
+  useClickOutside(containerRef, () => {
+    setSearchValue('');
+  });
 
   const onTagSelect = (value: string) => {
     if (knownTags.current.has(value)) {
@@ -97,17 +106,27 @@ const TagsSelect = React.memo<TagsSelectProps>(({ onChange }) => {
     }
   };
 
+  const onKeyPress = (e: React.KeyboardEvent) => {
+    if (e.code === 'Enter' || e.code === 'Escape') {
+      setSearchValue('');
+    }
+  };
+
   return (
-    <Select
-      mode="tags"
-      placeholder="Select tags"
-      filterOption={false}
-      options={tagOptions}
-      onSearch={fetchFilteredTags}
-      notFoundContent={tagsLoading ? <Spin size="small" /> : null}
-      onSelect={onTagSelect}
-      disabled={newTagLoading}
-    ></Select>
+    <div ref={containerRef} className="tags-select-container">
+      <Select
+        mode="tags"
+        placeholder="Select tags"
+        filterOption={false}
+        options={tagOptions}
+        onSearch={fetchFilteredTags}
+        notFoundContent={tagsLoading ? <Spin size="small" /> : null}
+        onSelect={onTagSelect}
+        disabled={newTagLoading}
+        searchValue={searchValue}
+        onKeyDown={onKeyPress}
+      ></Select>
+    </div>
   );
 });
 
